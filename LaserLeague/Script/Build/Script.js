@@ -34,21 +34,30 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
-    var f = FudgeCore;
-    f.Debug.info("Main Program Template running!");
+    var ƒ = FudgeCore;
+    ƒ.Debug.info("Main Program Template running!");
     let viewport;
     document.addEventListener("interactiveViewportStarted", start);
+    let transform;
     function start(_event) {
         viewport = _event.detail;
-        f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
-        f.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
+        ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         let graph = viewport.getBranch();
-        console.log(graph.getChildrenByName("Lasers")[0]);
+        console.log("graph");
+        console.log(graph);
+        console.log("Hier Agent");
+        console.log(graph.getChildrenByName('Agents'));
+        console.log(graph.getChildrenByName('Lasers')[0].getChildrenByName('Center_Node#1')[0]);
+        let laser = graph.getChildrenByName('Lasers')[0].getChildrenByName('Center_Node#1')[0];
+        transform = laser.getComponent(ƒ.ComponentTransform).mtxLocal;
+        console.log(transform);
     }
     function update(_event) {
         // ƒ.Physics.world.simulate();  // if physics is included and used
+        transform.rotateZ(6);
         viewport.draw();
-        f.AudioManager.default.update();
+        ƒ.AudioManager.default.update();
     }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

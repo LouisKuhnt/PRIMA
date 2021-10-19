@@ -1,6 +1,6 @@
 declare namespace Script {
-    import f = FudgeCore;
-    class CustomComponentScript extends f.ComponentScript {
+    import ƒ = FudgeCore;
+    class CustomComponentScript extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;
         constructor();
