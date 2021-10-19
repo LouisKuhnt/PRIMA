@@ -1,20 +1,27 @@
 namespace Script {
-  import ƒ = FudgeCore;
-  ƒ.Debug.info("Main Program Template running!")
+  import f = FudgeCore;
+  f.Debug.info("Main Program Template running!")
 
-  let viewport: ƒ.Viewport;
+  let viewport: f.Viewport;
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
+
+  let transform: f.Matrix4x4;
 
   function start(_event: CustomEvent): void {
     viewport = _event.detail;
 
-    ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    // ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+    f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
+    f.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+
+    let graph: f.Node = viewport.getBranch();
+    let laser: f.Node = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser")[0];
+    transform = laser.getComponent(f.ComponentTransform).mtxLocal;
   }
 
   function update(_event: Event): void {
     // ƒ.Physics.world.simulate();  // if physics is included and used
+    transform.rotateZ(6);
     viewport.draw();
-    ƒ.AudioManager.default.update();
+    f.AudioManager.default.update();
   }
 }
