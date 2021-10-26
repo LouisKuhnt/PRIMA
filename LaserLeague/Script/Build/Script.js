@@ -38,19 +38,29 @@ var Script;
     ƒ.Debug.info("Main Program Template running!");
     let viewport;
     document.addEventListener("interactiveViewportStarted", start);
-    let graph, agentSymbol, laser, agent;
+    let graph, agentSymbol, laser, beams, testSymbol;
+    let agent;
+    let lasers;
     let moveLaserBeams;
     let moveSymbolOfAgent;
     let deltaTime;
+    let posLocal;
+    let counter = 1;
     const speedLaserRotate = 360;
     const speedAgentTranslation = 10;
     const speedAgentRotation = 360;
+    let ctrForward = new ƒ.Control("Forward", speedAgentTranslation, 0 /* PROPORTIONAL */);
+    let ctrRotation = new ƒ.Control("Rotate", speedAgentRotation, 0 /* PROPORTIONAL */);
+    ctrRotation.setDelay(100);
+    ctrForward.setDelay(200);
     function start(_event) {
         viewport = _event.detail;
         graph = viewport.getBranch();
         console.log("graph");
         console.log(graph);
-        laser = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser#1")[0].getChildrenByName("Center")[0];
+        testSymbol = graph.getChildrenByName("Arena")[0].getChildrenByName("Test_Stuff")[0];
+        lasers = graph.getChildrenByName("Lasers")[0];
+        laser = lasers.getChildrenByName("Laser#1")[0].getChildrenByName("Center")[0];
         agent = graph.getChildrenByName('Agents')[0].getChildrenByName('Agent#1')[0];
         agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
         moveLaserBeams = laser.getComponent(ƒ.ComponentTransform).mtxLocal;
@@ -62,18 +72,33 @@ var Script;
     function update(_event) {
         deltaTime = ƒ.Loop.timeFrameReal / 1000;
         // ƒ.Physics.world.simulate();  // if physics is included and used
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]))
-            agent.mtxLocal.translateY(speedAgentTranslation * deltaTime);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]))
-            agent.mtxLocal.translateY(-speedAgentTranslation * deltaTime);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT]))
-            agent.mtxLocal.rotateZ(speedAgentRotation * deltaTime);
-        if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]))
-            agent.mtxLocal.rotateZ(-speedAgentRotation * deltaTime);
+        let ctrlDelayForwardandBackward = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])
+            + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
+        let ctrlDelayRotate = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT])
+            + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]));
+        ctrForward.setInput(ctrlDelayForwardandBackward * deltaTime);
+        agent.mtxLocal.translateY(ctrForward.getOutput());
+        ctrRotation.setInput(ctrlDelayRotate * deltaTime);
+        agent.mtxLocal.rotateZ(ctrRotation.getOutput());
         moveLaserBeams.rotateZ(speedLaserRotate * deltaTime);
         moveSymbolOfAgent.rotateZ(1);
+        checkCollision();
         viewport.draw();
         ƒ.AudioManager.default.update();
+    }
+    function checkCollision() {
+        testSymbol.activate(false);
+        //console.log("pls help im fucking stupid");
+        beams = lasers.getChildrenByName("Laser#1")[0].getChildrenByName("Center")[0].getChildren()[2];
+        //console.log("Beams: "+ beams.mtxWorldInverse.toString());
+        //console.log("Beams:");
+        //console.log(beams);
+        posLocal = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beams.mtxWorldInverse, true);
+        console.log(posLocal.toString());
+        if ((posLocal.x <= 0.1 && posLocal.x >= -0.1) && (posLocal.y <= 4 && posLocal.y >= -4))
+            console.log("tot");
+        if ((posLocal.x <= 4 && posLocal.x >= -4) && (posLocal.y <= 0.1 && posLocal.y >= -0.1))
+            console.log("tot");
     }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
