@@ -1,4 +1,4 @@
-namespace Script {
+namespace LaserLeague {
   import ƒ = FudgeCore;
   ƒ.Debug.info("Main Program Template running!")
 
@@ -49,7 +49,7 @@ namespace Script {
       for (let xPos = -1; xPos <= 1; xPos++) {
         let graphLaser: ƒ.Graph = <ƒ.Graph>FudgeCore.Project.resources["Graph|2021-11-02T13:20:08.111Z|45928"];
         let laser: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(graphLaser);
-        let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos*8,yPos*6,1);
+        let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos*8,yPos*3.5,1);
         laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({translation: laserTranslate});
         getAllLasers.addChild(laser);
       }
@@ -79,7 +79,7 @@ namespace Script {
     moveSymbolOfAgent.rotateZ(1);
 
     lasers.forEach(laser => {
-      let laserBeams: ƒ.Node[] = laser.getChildrenByName("Laser")[0].getChildrenByName("Beam");
+      let laserBeams: ƒ.Node[] = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
       laserBeams.forEach(beam => {
         checkCollision(agent, beam);
       });

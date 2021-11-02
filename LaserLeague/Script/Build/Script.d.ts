@@ -30,5 +30,5 @@ declare namespace Script {
         update: (_event: Event) => void;
     }
 }
-declare namespace Script {
+declare namespace LaserLeague {
 }

@@ -109,8 +109,8 @@ var Script;
     }
     Script.LaserRotation = LaserRotation;
 })(Script || (Script = {}));
-var Script;
-(function (Script) {
+var LaserLeague;
+(function (LaserLeague) {
     var ƒ = FudgeCore;
     ƒ.Debug.info("Main Program Template running!");
     let viewport;
@@ -149,7 +149,7 @@ var Script;
             for (let xPos = -1; xPos <= 1; xPos++) {
                 let graphLaser = FudgeCore.Project.resources["Graph|2021-11-02T13:20:08.111Z|45928"];
                 let laser = await ƒ.Project.createGraphInstance(graphLaser);
-                let laserTranslate = new ƒ.Vector3(xPos * 8, yPos * 6, 1);
+                let laserTranslate = new ƒ.Vector3(xPos * 8, yPos * 3.5, 1);
                 laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({ translation: laserTranslate });
                 getAllLasers.addChild(laser);
             }
@@ -168,7 +168,7 @@ var Script;
         agent.mtxLocal.rotateZ(ctrRotation.getOutput());
         moveSymbolOfAgent.rotateZ(1);
         lasers.forEach(laser => {
-            let laserBeams = laser.getChildrenByName("Laser")[0].getChildrenByName("Beam");
+            let laserBeams = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
             laserBeams.forEach(beam => {
                 checkCollision(agent, beam);
             });
@@ -184,5 +184,5 @@ var Script;
             console.log("treffer");
         }
     }
-})(Script || (Script = {}));
+})(LaserLeague || (LaserLeague = {}));
 //# sourceMappingURL=Script.js.map
