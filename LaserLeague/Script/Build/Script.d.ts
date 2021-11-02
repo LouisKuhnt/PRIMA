@@ -1,3 +1,9 @@
+declare namespace LaserLeague {
+    import ƒ = FudgeCore;
+    class Agent extends ƒ.Node {
+        constructor();
+    }
+}
 declare namespace Script {
     import ƒ = FudgeCore;
     class CollisionDetection extends ƒ.ComponentScript {

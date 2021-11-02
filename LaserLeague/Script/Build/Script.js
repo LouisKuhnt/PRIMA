@@ -1,4 +1,14 @@
 "use strict";
+var LaserLeague;
+(function (LaserLeague) {
+    var ƒ = FudgeCore;
+    class Agent extends ƒ.Node {
+        constructor() {
+            super("Agent");
+        }
+    }
+    LaserLeague.Agent = Agent;
+})(LaserLeague || (LaserLeague = {}));
 var Script;
 (function (Script) {
     var ƒ = FudgeCore;

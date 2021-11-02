@@ -564,7 +564,7 @@
               ],
               "LaserRotation": [
                 {
-                  "Script.LaserRotation": {
+                  "LaserLeague.LaserRotation": {
                     "active": true,
                     "message": "LaserRotation added to ",
                     "speedLaserRotate": 90
