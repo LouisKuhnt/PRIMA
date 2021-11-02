@@ -5,15 +5,13 @@ namespace Script {
   let viewport: ƒ.Viewport;
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
-  let graph, agentSymbol, laser, beams, testSymbol: ƒ.Node;
+  let graph: ƒ.Node;
   let agent: ƒ.Node;
-  let lasers: ƒ.Node;
-  let moveLaserBeams: ƒ.Matrix4x4;
+  let agentSymbol: ƒ.Node;
+  let lasers: ƒ.Node[];
   let moveSymbolOfAgent: ƒ.Matrix4x4;
   let deltaTime: number;
-  let posLocal: ƒ.Vector3;
-  let counter: number = 1;
-  const speedLaserRotate: number = 360;
+  let getAllLasers: ƒ.Node;
   const speedAgentTranslation: number = 10;
   const speedAgentRotation: number = 360;
 
@@ -29,19 +27,33 @@ namespace Script {
     console.log("graph");
     console.log(graph);
 
-    testSymbol = graph.getChildrenByName("Arena")[0].getChildrenByName("Test_Stuff")[0];
-    lasers = graph.getChildrenByName("Lasers")[0];
-    laser = lasers.getChildrenByName("Laser#1")[0].getChildrenByName("Center")[0];
     agent = graph.getChildrenByName('Agents')[0].getChildrenByName('Agent#1')[0];
     agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
 
-    moveLaserBeams = laser.getComponent(ƒ.ComponentTransform).mtxLocal;
+    getAllLasers = graph.getChildrenByName("Lasers")[0];
+
     moveSymbolOfAgent = agentSymbol.getComponent(ƒ.ComponentTransform).mtxLocal;
+
+    putLaserOnArena().then(() => {
+      lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
+      ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
+    });
 
     viewport.camera.mtxPivot.translateZ(-20);
 
-    ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+  }
+
+  async function putLaserOnArena(){
+    for (let yPos = -1; yPos <= 1; yPos+=2) {
+      for (let xPos = -1; xPos <= 1; xPos++) {
+        let graphLaser: ƒ.Graph = <ƒ.Graph>FudgeCore.Project.resources["Graph|2021-11-02T13:20:08.111Z|45928"];
+        let laser: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(graphLaser);
+        let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos*8,yPos*6,1);
+        laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({translation: laserTranslate});
+        getAllLasers.addChild(laser);
+      }
+    }
   }
 
   function update(_event: Event): void {
@@ -63,30 +75,26 @@ namespace Script {
 
     ctrRotation.setInput(ctrlDelayRotate * deltaTime);
     agent.mtxLocal.rotateZ(ctrRotation.getOutput());
-      
-    moveLaserBeams.rotateZ(speedLaserRotate * deltaTime);
+    
     moveSymbolOfAgent.rotateZ(1);
 
-      checkCollision();
+    lasers.forEach(laser => {
+      let laserBeams: ƒ.Node[] = laser.getChildrenByName("Laser")[0].getChildrenByName("Beam");
+      laserBeams.forEach(beam => {
+        checkCollision(agent, beam);
+      });
+    });
 
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
 
-  function checkCollision(): void {
-    testSymbol.activate(false);
-    //console.log("pls help im fucking stupid");
-    beams = lasers.getChildrenByName("Laser#1")[0].getChildrenByName("Center")[0].getChildren()[2];
-    //console.log("Beams: "+ beams.mtxWorldInverse.toString());
-    //console.log("Beams:");
-    //console.log(beams);
-    posLocal = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beams.mtxWorldInverse, true);
-    console.log(posLocal.toString());
-
-    if((posLocal.x <= 0.1 && posLocal.x >= -0.1) && (posLocal.y <= 4 && posLocal.y >= -4))
-      console.log("tot");
-
-    if((posLocal.x <= 4 && posLocal.x >= -4) && (posLocal.y <= 0.1 && posLocal.y >= -0.1))
-      console.log("tot");
+  function checkCollision (agent: ƒ.Node, beam: ƒ.Node) {
+    let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);   
+    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
+    let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
+    if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
+      console.log("treffer");
+    }
   }
 }
