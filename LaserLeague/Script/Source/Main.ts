@@ -7,11 +7,13 @@ namespace LaserLeague {
 
   let graph: ƒ.Node;
   let agent: ƒ.Node;
+  //let agentProgramm: Agent;
   let agentSymbol: ƒ.Node;
   let lasers: ƒ.Node[];
   let moveSymbolOfAgent: ƒ.Matrix4x4;
   let deltaTime: number;
   let getAllLasers: ƒ.Node;
+  let agentStartPoint: ƒ.Vector3;
   const speedAgentTranslation: number = 10;
   const speedAgentRotation: number = 360;
 
@@ -28,7 +30,10 @@ namespace LaserLeague {
     console.log(graph);
 
     agent = graph.getChildrenByName('Agents')[0].getChildrenByName('Agent#1')[0];
+    agentStartPoint = agent.mtxLocal.translation;
     agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
+
+    //agentProgramm = new Agent;
 
     getAllLasers = graph.getChildrenByName("Lasers")[0];
 
@@ -50,7 +55,7 @@ namespace LaserLeague {
         let graphLaser: ƒ.Graph = <ƒ.Graph>FudgeCore.Project.resources["Graph|2021-11-02T13:20:08.111Z|45928"];
         let laser: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(graphLaser);
         let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos*8,yPos*3.5,1);
-        laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({translation: laserTranslate});
+        laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({translation: laserTranslate,});
         getAllLasers.addChild(laser);
       }
     }
@@ -91,10 +96,18 @@ namespace LaserLeague {
 
   function checkCollision (agent: ƒ.Node, beam: ƒ.Node) {
     let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);   
-    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
+    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x/2 + agent.radius;
     let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
+    //console.log(distance.toString());
     if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
       console.log("treffer");
+      ctrForward.setInput(0);
+      agent.mtxLocal.translation = agentStartPoint;
     }
+    //0.2 is the beamwidth and 0.5 agent radius
+    /*if (distance.x < (- 0.2 / 2 - 0.5) || distance.x > (0.2 / 2 + 0.5) || distance.y < (0.5) || distance.y > (3 + 0.5)) {
+    } else {
+      console.log("intersecting");
+    }*/
   }
 }

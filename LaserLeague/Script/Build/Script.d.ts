@@ -4,7 +4,7 @@ declare namespace LaserLeague {
         constructor();
     }
 }
-declare namespace Script {
+declare namespace LaserLeague {
     import ƒ = FudgeCore;
     class CollisionDetection extends ƒ.ComponentScript {
         static readonly iSubclass: number;
@@ -14,7 +14,7 @@ declare namespace Script {
         update: (_event: Event) => void;
     }
 }
-declare namespace Script {
+declare namespace LaserLeague {
     import ƒ = FudgeCore;
     class CustomComponentScript extends ƒ.ComponentScript {
         static readonly iSubclass: number;
@@ -23,7 +23,7 @@ declare namespace Script {
         hndEvent: (_event: Event) => void;
     }
 }
-declare namespace Script {
+declare namespace LaserLeague {
     import ƒ = FudgeCore;
     class LaserRotation extends ƒ.ComponentScript {
         static readonly iSubclass: number;
