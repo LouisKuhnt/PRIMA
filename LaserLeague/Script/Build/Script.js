@@ -3,6 +3,8 @@ var LaserLeague;
 (function (LaserLeague) {
     var ƒ = FudgeCore;
     class Agent extends ƒ.Node {
+        health = 1;
+        name = "Player Number 1";
         constructor() {
             super("Agent");
             this.addComponent(new ƒ.ComponentTransform);
@@ -130,7 +132,7 @@ var LaserLeague;
     document.addEventListener("interactiveViewportStarted", start);
     let graph;
     let agent;
-    //let agentProgramm: Agent;
+    let agentProgramm;
     let agentSymbol;
     let lasers;
     let moveSymbolOfAgent;
@@ -151,7 +153,10 @@ var LaserLeague;
         agent = graph.getChildrenByName('Agents')[0].getChildrenByName('Agent#1')[0];
         agentStartPoint = agent.mtxLocal.translation;
         agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
-        //agentProgramm = new Agent;
+        agentProgramm = new LaserLeague.Agent;
+        graph.getChildrenByName("Agents")[0].addChild(agentProgramm);
+        let domName = document.querySelector("#hud>div");
+        domName.textContent = agentProgramm.name;
         getAllLasers = graph.getChildrenByName("Lasers")[0];
         moveSymbolOfAgent = agentSymbol.getComponent(ƒ.ComponentTransform).mtxLocal;
         putLaserOnArena().then(() => {
@@ -190,6 +195,8 @@ var LaserLeague;
                 checkCollision(agent, beam);
             });
         });
+        let domHealth = document.querySelector("input");
+        domHealth.value = agentProgramm.health.toString();
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
@@ -197,17 +204,11 @@ var LaserLeague;
         let distance = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
         let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
         let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
-        //console.log(distance.toString());
         if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
             console.log("treffer");
             ctrForward.setInput(0);
             agent.mtxLocal.translation = agentStartPoint;
         }
-        //0.2 is the beamwidth and 0.5 agent radius
-        /*if (distance.x < (- 0.2 / 2 - 0.5) || distance.x > (0.2 / 2 + 0.5) || distance.y < (0.5) || distance.y > (3 + 0.5)) {
-        } else {
-          console.log("intersecting");
-        }*/
     }
 })(LaserLeague || (LaserLeague = {}));
 //# sourceMappingURL=Script.js.map

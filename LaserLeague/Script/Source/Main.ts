@@ -7,7 +7,7 @@ namespace LaserLeague {
 
   let graph: ƒ.Node;
   let agent: ƒ.Node;
-  //let agentProgramm: Agent;
+  let agentProgramm: Agent;
   let agentSymbol: ƒ.Node;
   let lasers: ƒ.Node[];
   let moveSymbolOfAgent: ƒ.Matrix4x4;
@@ -33,7 +33,10 @@ namespace LaserLeague {
     agentStartPoint = agent.mtxLocal.translation;
     agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
 
-    //agentProgramm = new Agent;
+    agentProgramm = new Agent;
+    graph.getChildrenByName("Agents")[0].addChild(agentProgramm);
+    let domName: HTMLElement = document.querySelector("#hud>div");
+    domName.textContent = agentProgramm.name;
 
     getAllLasers = graph.getChildrenByName("Lasers")[0];
 
@@ -49,13 +52,13 @@ namespace LaserLeague {
     ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
 
-  async function putLaserOnArena(){
-    for (let yPos = -1; yPos <= 1; yPos+=2) {
+  async function putLaserOnArena() {
+    for (let yPos = -1; yPos <= 1; yPos += 2) {
       for (let xPos = -1; xPos <= 1; xPos++) {
         let graphLaser: ƒ.Graph = <ƒ.Graph>FudgeCore.Project.resources["Graph|2021-11-02T13:20:08.111Z|45928"];
         let laser: ƒ.GraphInstance = await ƒ.Project.createGraphInstance(graphLaser);
-        let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos*8,yPos*3.5,1);
-        laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({translation: laserTranslate,});
+        let laserTranslate: ƒ.Vector3 = new ƒ.Vector3(xPos * 8, yPos * 3.5, 1);
+        laser.getComponent(ƒ.ComponentTransform).mtxLocal.mutate({ translation: laserTranslate, });
         getAllLasers.addChild(laser);
       }
     }
@@ -80,7 +83,7 @@ namespace LaserLeague {
 
     ctrRotation.setInput(ctrlDelayRotate * deltaTime);
     agent.mtxLocal.rotateZ(ctrRotation.getOutput());
-    
+
     moveSymbolOfAgent.rotateZ(1);
 
     lasers.forEach(laser => {
@@ -90,24 +93,21 @@ namespace LaserLeague {
       });
     });
 
+    let domHealth: HTMLInputElement = document.querySelector("input");
+    domHealth.value = agentProgramm.health.toString();
+
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
 
-  function checkCollision (agent: ƒ.Node, beam: ƒ.Node) {
-    let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);   
-    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x/2 + agent.radius;
+  function checkCollision(agent: ƒ.Node, beam: ƒ.Node) {
+    let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
+    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
     let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
-    //console.log(distance.toString());
     if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
       console.log("treffer");
       ctrForward.setInput(0);
       agent.mtxLocal.translation = agentStartPoint;
     }
-    //0.2 is the beamwidth and 0.5 agent radius
-    /*if (distance.x < (- 0.2 / 2 - 0.5) || distance.x > (0.2 / 2 + 0.5) || distance.y < (0.5) || distance.y > (3 + 0.5)) {
-    } else {
-      console.log("intersecting");
-    }*/
   }
 }

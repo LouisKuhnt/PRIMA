@@ -14,3 +14,15 @@ canvas.fullscreen {
   width: 100vw; 
   height: 100vh; 
 }
+
+div#hud{
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  background-color: hsla(240, 80%, 50%, 50%);
+  color: azure;
+}
+
+#hud>div{
+
+}
