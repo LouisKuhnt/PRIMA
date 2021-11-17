@@ -73,6 +73,10 @@ var LaserLeague;
             this.node.mtxLocal.translation = new ƒ.Vector3(5, 0, 0.2);
             this.ctrForward.setInput(0);
             this.ctrRotation.setInput(0);
+            this.ctrRotation.setInput(0);
+            this.ctrForward.setDelay(0);
+            this.ctrRotation.setDelay(100);
+            this.ctrForward.setDelay(200);
             this.node.mtxLocal.rotation = new ƒ.Vector3(0, 0, 0);
         };
     }
@@ -250,10 +254,11 @@ var LaserLeague;
         }
     }
     function update(_event) {
+        let _agent = agent.getChildren()[0];
         lasers.forEach(laser => {
             let laserBeams = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
             laserBeams.forEach(beam => {
-                checkCollision(beam);
+                checkCollision(_agent, beam);
             });
         });
         let domHealth = document.querySelector("input");
@@ -261,14 +266,13 @@ var LaserLeague;
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
-    function checkCollision(beam) {
-        let _agent = agent.getChildren()[0];
+    function checkCollision(_agent, beam) {
         let distance = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
         let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
         let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
         if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
             console.log("treffer");
-            _agent.getComponent(LaserLeague.AgentComponent).respawn();
+            //_agent.getComponent(AgentComponent).respawn();
         }
     }
 })(LaserLeague || (LaserLeague = {}));

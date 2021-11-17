@@ -48,12 +48,12 @@ namespace LaserLeague {
   }
 
   function update(_event: Event): void {
-    
+    let _agent: ƒ.Node = agent.getChildren()[0];
 
     lasers.forEach(laser => {
       let laserBeams: ƒ.Node[] = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
       laserBeams.forEach(beam => {
-        checkCollision(beam);
+        checkCollision(_agent, beam);
       });
     });
 
@@ -64,15 +64,13 @@ namespace LaserLeague {
     ƒ.AudioManager.default.update();
   }
 
-  function checkCollision(beam: ƒ.Node) {
-    let _agent: ƒ.Node = agent.getChildren()[0];
-
+  function checkCollision(_agent: ƒ.Node, beam: ƒ.Node) {
     let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
     let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
     let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
     if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
       console.log("treffer");
-      _agent.getComponent(AgentComponent).respawn();
+      //_agent.getComponent(AgentComponent).respawn();
     }
   }
 }

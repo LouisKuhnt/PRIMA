@@ -69,6 +69,10 @@ namespace LaserLeague {
         this.node.mtxLocal.translation = new ƒ.Vector3(5,0,0.2);
         this.ctrForward.setInput(0);
         this.ctrRotation.setInput(0);
+        this.ctrRotation.setInput(0);
+        this.ctrForward.setDelay(0);
+        this.ctrRotation.setDelay(100);
+        this.ctrForward.setDelay(200);
         this.node.mtxLocal.rotation = new ƒ.Vector3(0,0,0);
       }
   

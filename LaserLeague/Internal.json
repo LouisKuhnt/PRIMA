@@ -117,9 +117,9 @@
   },
   "Audio|2021-11-09T14:25:52.888Z|68689": {
     "ƒ.Audio": {
-      "url": "LaserLeague\\Sound\\trancyvania.mp3",
+      "url": "Sound\\trancyvania.mp3",
       "idResource": "Audio|2021-11-09T14:25:52.888Z|68689",
-      "name": "LaserLeague\\Sound\\trancyvania.mp3",
+      "name": "Sound\\trancyvania.mp3",
       "type": "Audio"
     }
   },
