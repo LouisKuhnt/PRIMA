@@ -5,15 +5,15 @@ var LaserLeague;
     class Agent extends ƒ.Node {
         health = 1;
         name = "Player Number 1";
+        startPosition = new ƒ.Vector3(5, 0, 0.2);
         constructor() {
             super("Agent");
             this.create();
         }
         async create() {
             let agentGraph = FudgeCore.Project.resources["Graph|2021-11-17T11:08:30.266Z|37675"];
-            let position = new ƒ.Vector3(5, 0, 0.2);
             let instance = await ƒ.Project.createGraphInstance(agentGraph);
-            instance.mtxLocal.translation = position;
+            instance.mtxLocal.translation = this.startPosition;
             this.addChild(instance);
         }
     }
@@ -28,8 +28,12 @@ var LaserLeague;
         static iSubclass = ƒ.Component.registerSubclass(AgentComponent);
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "AgentComponent added to ";
+        ctrForward = new ƒ.Control("Forward", 10, 0 /* PROPORTIONAL */);
+        ctrRotation = new ƒ.Control("Rotate", 360, 0 /* PROPORTIONAL */);
         constructor() {
             super();
+            this.ctrRotation.setDelay(100);
+            this.ctrForward.setDelay(200);
             // Don't start when running in editor
             if (ƒ.Project.mode == ƒ.MODE.EDITOR)
                 return;
@@ -42,12 +46,34 @@ var LaserLeague;
             switch (_event.type) {
                 case "componentAdd" /* COMPONENT_ADD */:
                     ƒ.Debug.log(this.message, this.node);
+                    ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
                     break;
                 case "componentRemove" /* COMPONENT_REMOVE */:
                     this.removeEventListener("componentAdd" /* COMPONENT_ADD */, this.hndEvent);
                     this.removeEventListener("componentRemove" /* COMPONENT_REMOVE */, this.hndEvent);
                     break;
             }
+        };
+        update = (_event) => {
+            this.movement(_event);
+        };
+        movement = (_event) => {
+            let deltaTime = ƒ.Loop.timeFrameReal / 1000;
+            // ƒ.Physics.world.simulate();  // if physics is included and used
+            let ctrlDelayForwardandBackward = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])
+                + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
+            let ctrlDelayRotate = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT])
+                + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]));
+            this.ctrForward.setInput(ctrlDelayForwardandBackward * deltaTime);
+            this.node.mtxLocal.translateY(this.ctrForward.getOutput());
+            this.ctrRotation.setInput(ctrlDelayRotate * deltaTime);
+            this.node.mtxLocal.rotateZ(this.ctrRotation.getOutput());
+        };
+        respawn = () => {
+            this.node.mtxLocal.translation = new ƒ.Vector3(5, 0, 0.2);
+            this.ctrForward.setInput(0);
+            this.ctrRotation.setInput(0);
+            this.node.mtxLocal.rotation = new ƒ.Vector3(0, 0, 0);
         };
     }
     LaserLeague.AgentComponent = AgentComponent;
@@ -194,15 +220,7 @@ var LaserLeague;
     let graph;
     let agent;
     let lasers;
-    let deltaTime;
     let getAllLasers;
-    let agentStartPoint;
-    const speedAgentTranslation = 10;
-    const speedAgentRotation = 360;
-    let ctrForward = new ƒ.Control("Forward", speedAgentTranslation, 0 /* PROPORTIONAL */);
-    let ctrRotation = new ƒ.Control("Rotate", speedAgentRotation, 0 /* PROPORTIONAL */);
-    ctrRotation.setDelay(100);
-    ctrForward.setDelay(200);
     function start(_event) {
         viewport = _event.detail;
         graph = viewport.getBranch();
@@ -232,20 +250,10 @@ var LaserLeague;
         }
     }
     function update(_event) {
-        deltaTime = ƒ.Loop.timeFrameReal / 1000;
-        // ƒ.Physics.world.simulate();  // if physics is included and used
-        let ctrlDelayForwardandBackward = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])
-            + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP]));
-        let ctrlDelayRotate = (ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT])
-            + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]));
-        ctrForward.setInput(ctrlDelayForwardandBackward * deltaTime);
-        agent.mtxLocal.translateY(ctrForward.getOutput());
-        ctrRotation.setInput(ctrlDelayRotate * deltaTime);
-        agent.mtxLocal.rotateZ(ctrRotation.getOutput());
         lasers.forEach(laser => {
             let laserBeams = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
             laserBeams.forEach(beam => {
-                checkCollision(agent, beam);
+                checkCollision(beam);
             });
         });
         let domHealth = document.querySelector("input");
@@ -253,14 +261,14 @@ var LaserLeague;
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
-    function checkCollision(agent, beam) {
+    function checkCollision(beam) {
+        let _agent = agent.getChildren()[0];
         let distance = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
-        let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
-        let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
+        let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
+        let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
         if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
             console.log("treffer");
-            ctrForward.setInput(0);
-            agent.mtxLocal.translation = agentStartPoint;
+            _agent.getComponent(LaserLeague.AgentComponent).respawn();
         }
     }
 })(LaserLeague || (LaserLeague = {}));

@@ -8,16 +8,8 @@ namespace LaserLeague {
   let graph: ƒ.Node;
   let agent: Agent;
   let lasers: ƒ.Node[];
-  let deltaTime: number;
   let getAllLasers: ƒ.Node;
-  let agentStartPoint: ƒ.Vector3;
-  const speedAgentTranslation: number = 10;
-  const speedAgentRotation: number = 360;
-
-  let ctrForward: ƒ.Control = new ƒ.Control("Forward", speedAgentTranslation, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  let ctrRotation: ƒ.Control = new ƒ.Control("Rotate", speedAgentRotation, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  ctrRotation.setDelay(100);
-  ctrForward.setDelay(200);
+  
 
   function start(_event: CustomEvent): void {
     viewport = _event.detail;
@@ -56,29 +48,12 @@ namespace LaserLeague {
   }
 
   function update(_event: Event): void {
-    deltaTime = ƒ.Loop.timeFrameReal / 1000;
-    // ƒ.Physics.world.simulate();  // if physics is included and used
-
-    let ctrlDelayForwardandBackward: number = (
-      ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN])
-      + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP])
-    );
-
-    let ctrlDelayRotate: number = (
-      ƒ.Keyboard.mapToValue(1, 0, [ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT])
-      + ƒ.Keyboard.mapToValue(-1, 0, [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT])
-    );
-
-    ctrForward.setInput(ctrlDelayForwardandBackward * deltaTime);
-    agent.mtxLocal.translateY(ctrForward.getOutput());
-
-    ctrRotation.setInput(ctrlDelayRotate * deltaTime);
-    agent.mtxLocal.rotateZ(ctrRotation.getOutput());
+    
 
     lasers.forEach(laser => {
       let laserBeams: ƒ.Node[] = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
       laserBeams.forEach(beam => {
-        checkCollision(agent, beam);
+        checkCollision(beam);
       });
     });
 
@@ -89,14 +64,15 @@ namespace LaserLeague {
     ƒ.AudioManager.default.update();
   }
 
-  function checkCollision(agent: ƒ.Node, beam: ƒ.Node) {
+  function checkCollision(beam: ƒ.Node) {
+    let _agent: ƒ.Node = agent.getChildren()[0];
+
     let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
-    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + agent.radius;
-    let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + agent.radius;
+    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
+    let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
     if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
       console.log("treffer");
-      ctrForward.setInput(0);
-      agent.mtxLocal.translation = agentStartPoint;
+      _agent.getComponent(AgentComponent).respawn();
     }
   }
 }

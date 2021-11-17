@@ -117,9 +117,9 @@
   },
   "Audio|2021-11-09T14:25:52.888Z|68689": {
     "ƒ.Audio": {
-      "url": "Sound\\trancyvania.mp3",
+      "url": "LaserLeague\\Sound\\trancyvania.mp3",
       "idResource": "Audio|2021-11-09T14:25:52.888Z|68689",
-      "name": "Sound\\trancyvania.mp3",
+      "name": "LaserLeague\\Sound\\trancyvania.mp3",
       "type": "Audio"
     }
   },
@@ -704,6 +704,14 @@
               "Component": {
                 "active": true
               }
+            }
+          }
+        ],
+        "AgentComponent": [
+          {
+            "LaserLeague.AgentComponent": {
+              "active": true,
+              "message": "AgentComponent added to "
             }
           }
         ]

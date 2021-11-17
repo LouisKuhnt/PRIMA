@@ -3,6 +3,7 @@ declare namespace LaserLeague {
     class Agent extends ƒ.Node {
         health: number;
         name: string;
+        startPosition: ƒ.Vector3;
         constructor();
         create(): Promise<void>;
     }
@@ -12,8 +13,13 @@ declare namespace LaserLeague {
     class AgentComponent extends ƒ.ComponentScript {
         static readonly iSubclass: number;
         message: string;
+        ctrForward: ƒ.Control;
+        ctrRotation: ƒ.Control;
         constructor();
         hndEvent: (_event: Event) => void;
+        update: (_event: Event) => void;
+        movement: (_event: Event) => void;
+        respawn: () => void;
     }
 }
 declare namespace LaserLeague {
