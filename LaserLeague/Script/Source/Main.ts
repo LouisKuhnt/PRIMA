@@ -6,11 +6,8 @@ namespace LaserLeague {
   document.addEventListener("interactiveViewportStarted", <EventListener>start);
 
   let graph: ƒ.Node;
-  let agent: ƒ.Node;
-  let agentProgramm: Agent;
-  let agentSymbol: ƒ.Node;
+  let agent: Agent;
   let lasers: ƒ.Node[];
-  let moveSymbolOfAgent: ƒ.Matrix4x4;
   let deltaTime: number;
   let getAllLasers: ƒ.Node;
   let agentStartPoint: ƒ.Vector3;
@@ -29,18 +26,12 @@ namespace LaserLeague {
     console.log("graph");
     console.log(graph);
 
-    agent = graph.getChildrenByName('Agents')[0].getChildrenByName('Agent#1')[0];
-    agentStartPoint = agent.mtxLocal.translation;
-    agentSymbol = agent.getChildrenByName('Agent_Symbol')[0];
-
-    agentProgramm = new Agent;
-    graph.getChildrenByName("Agents")[0].addChild(agentProgramm);
-    let domName: HTMLElement = document.querySelector("#hud>div");
-    domName.textContent = agentProgramm.name;
+    agent = new Agent;
+    graph.getChildrenByName("Agents")[0].addChild(agent);
+    let domName: HTMLElement = document.querySelector("#hud>input");
+    domName.textContent = agent.name;
 
     getAllLasers = graph.getChildrenByName("Lasers")[0];
-
-    moveSymbolOfAgent = agentSymbol.getComponent(ƒ.ComponentTransform).mtxLocal;
 
     putLaserOnArena().then(() => {
       lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
@@ -84,8 +75,6 @@ namespace LaserLeague {
     ctrRotation.setInput(ctrlDelayRotate * deltaTime);
     agent.mtxLocal.rotateZ(ctrRotation.getOutput());
 
-    moveSymbolOfAgent.rotateZ(1);
-
     lasers.forEach(laser => {
       let laserBeams: ƒ.Node[] = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
       laserBeams.forEach(beam => {
@@ -94,7 +83,7 @@ namespace LaserLeague {
     });
 
     let domHealth: HTMLInputElement = document.querySelector("input");
-    domHealth.value = agentProgramm.health.toString();
+    domHealth.value = agent.health.toString();
 
     viewport.draw();
     ƒ.AudioManager.default.update();
