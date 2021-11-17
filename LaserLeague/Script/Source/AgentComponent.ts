@@ -76,9 +76,9 @@ namespace LaserLeague {
         this.node.mtxLocal.rotation = new ƒ.Vector3(0,0,0);
       }
   
-      // protected reduceMutator(_mutator: ƒ.Mutator): void {
+      protected reduceMutator(_mutator: ƒ.Mutator): void {
       //   // delete properties that should not be mutated
       //   // undefined properties and private fields (#) will not be included by default
-      // }
+      }
     }
   }

@@ -9,6 +9,8 @@ namespace LaserLeague {
   let agent: Agent;
   let lasers: ƒ.Node[];
   let getAllLasers: ƒ.Node;
+  let hitSound: ƒ.ComponentAudio;
+  let gotHit: ƒ.Audio;
   
 
   function start(_event: CustomEvent): void {
@@ -20,10 +22,15 @@ namespace LaserLeague {
 
     agent = new Agent;
     graph.getChildrenByName("Agents")[0].addChild(agent);
+
     let domName: HTMLElement = document.querySelector("#hud>input");
     domName.textContent = agent.name;
 
     getAllLasers = graph.getChildrenByName("Lasers")[0];
+
+    gotHit = new ƒ.Audio("./Sound/hitSound.wav");
+    hitSound = new ƒ.ComponentAudio(gotHit, false, false);
+    hitSound.volume = 20;
 
     putLaserOnArena().then(() => {
       lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
@@ -48,29 +55,28 @@ namespace LaserLeague {
   }
 
   function update(_event: Event): void {
-    let _agent: ƒ.Node = agent.getChildren()[0];
-
-    lasers.forEach(laser => {
-      let laserBeams: ƒ.Node[] = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
-      laserBeams.forEach(beam => {
-        checkCollision(_agent, beam);
-      });
-    });
-
-    let domHealth: HTMLInputElement = document.querySelector("input");
-    domHealth.value = agent.health.toString();
-
+    checkCollision();
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
 
-  function checkCollision(_agent: ƒ.Node, beam: ƒ.Node) {
-    let distance: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
-    let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
-    let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
-    if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
-      console.log("treffer");
-      //_agent.getComponent(AgentComponent).respawn();
+  function checkCollision() {
+    let _agent: ƒ.Node = agent.getChildren()[0];
+
+    for (let i = 0; i < getAllLasers.getChildren().length; i++) {
+
+      getAllLasers.getChildren()[i].getChildren()[0].getChildren().forEach(element => {
+        let beam: ƒ.Node = element;
+        let posLocal: ƒ.Vector3 = ƒ.Vector3.TRANSFORMATION(_agent.mtxWorld.translation, beam.mtxWorldInverse, true);
+        let x = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius / 2;
+        let y = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius / 2;
+
+        if (posLocal.x <= (x) && posLocal.x >= -(x) && posLocal.y <= y && posLocal.y >= 0) {
+          console.log("intersecting");
+          hitSound.play(true);
+          _agent.getComponent(AgentComponent).respawn();
+        }
+      });
     }
   }
 }

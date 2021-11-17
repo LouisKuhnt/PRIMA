@@ -3,7 +3,6 @@ declare namespace LaserLeague {
     class Agent extends ƒ.Node {
         health: number;
         name: string;
-        startPosition: ƒ.Vector3;
         constructor();
         create(): Promise<void>;
     }
@@ -20,6 +19,7 @@ declare namespace LaserLeague {
         update: (_event: Event) => void;
         movement: (_event: Event) => void;
         respawn: () => void;
+        protected reduceMutator(_mutator: ƒ.Mutator): void;
     }
 }
 declare namespace LaserLeague {

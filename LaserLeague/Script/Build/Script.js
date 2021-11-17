@@ -5,7 +5,7 @@ var LaserLeague;
     class Agent extends ƒ.Node {
         health = 1;
         name = "Player Number 1";
-        startPosition = new ƒ.Vector3(5, 0, 0.2);
+        //public startPosition: ƒ.Vector3 = new ƒ.Vector3(5,0,0.2);
         constructor() {
             super("Agent");
             this.create();
@@ -13,7 +13,7 @@ var LaserLeague;
         async create() {
             let agentGraph = FudgeCore.Project.resources["Graph|2021-11-17T11:08:30.266Z|37675"];
             let instance = await ƒ.Project.createGraphInstance(agentGraph);
-            instance.mtxLocal.translation = this.startPosition;
+            //instance.mtxLocal.translation = this.startPosition;
             this.addChild(instance);
         }
     }
@@ -79,6 +79,10 @@ var LaserLeague;
             this.ctrForward.setDelay(200);
             this.node.mtxLocal.rotation = new ƒ.Vector3(0, 0, 0);
         };
+        reduceMutator(_mutator) {
+            //   // delete properties that should not be mutated
+            //   // undefined properties and private fields (#) will not be included by default
+        }
     }
     LaserLeague.AgentComponent = AgentComponent;
 })(LaserLeague || (LaserLeague = {}));
@@ -225,6 +229,8 @@ var LaserLeague;
     let agent;
     let lasers;
     let getAllLasers;
+    let hitSound;
+    let gotHit;
     function start(_event) {
         viewport = _event.detail;
         graph = viewport.getBranch();
@@ -235,6 +241,9 @@ var LaserLeague;
         let domName = document.querySelector("#hud>input");
         domName.textContent = agent.name;
         getAllLasers = graph.getChildrenByName("Lasers")[0];
+        gotHit = new ƒ.Audio("./Sound/hitSound.wav");
+        hitSound = new ƒ.ComponentAudio(gotHit, false, false);
+        hitSound.volume = 20;
         putLaserOnArena().then(() => {
             lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
@@ -254,25 +263,24 @@ var LaserLeague;
         }
     }
     function update(_event) {
-        let _agent = agent.getChildren()[0];
-        lasers.forEach(laser => {
-            let laserBeams = laser.getChildrenByName("Center")[0].getChildrenByName("Beam");
-            laserBeams.forEach(beam => {
-                checkCollision(_agent, beam);
-            });
-        });
-        let domHealth = document.querySelector("input");
-        domHealth.value = agent.health.toString();
+        checkCollision();
         viewport.draw();
         ƒ.AudioManager.default.update();
     }
-    function checkCollision(_agent, beam) {
-        let distance = ƒ.Vector3.TRANSFORMATION(agent.mtxWorld.translation, beam.mtxWorldInverse, true);
-        let minX = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius;
-        let minY = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius;
-        if (distance.x <= (minX) && distance.x >= -(minX) && distance.y <= minY && distance.y >= 0) {
-            console.log("treffer");
-            //_agent.getComponent(AgentComponent).respawn();
+    function checkCollision() {
+        let _agent = agent.getChildren()[0];
+        for (let i = 0; i < getAllLasers.getChildren().length; i++) {
+            getAllLasers.getChildren()[i].getChildren()[0].getChildren().forEach(element => {
+                let beam = element;
+                let posLocal = ƒ.Vector3.TRANSFORMATION(_agent.mtxWorld.translation, beam.mtxWorldInverse, true);
+                let x = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.x / 2 + _agent.radius / 2;
+                let y = beam.getComponent(ƒ.ComponentMesh).mtxPivot.scaling.y + _agent.radius / 2;
+                if (posLocal.x <= (x) && posLocal.x >= -(x) && posLocal.y <= y && posLocal.y >= 0) {
+                    console.log("intersecting");
+                    hitSound.play(true);
+                    _agent.getComponent(LaserLeague.AgentComponent).respawn();
+                }
+            });
         }
     }
 })(LaserLeague || (LaserLeague = {}));
