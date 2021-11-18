@@ -158,18 +158,18 @@ var LaserLeague;
 var LaserLeague;
 (function (LaserLeague) {
     var ƒ = FudgeCore;
-    //import ƒui = FudgeUserInterface;
+    var ƒui = FudgeUserInterface;
     class GameState extends ƒ.Mutable {
-        // private static controller: ƒui.Controller;
+        static controller;
         static instance;
         name = "LaserLeague";
         health = 1;
         constructor() {
             super();
-            // let domHud: HTMLDivElement = document.querySelector("#Hud");
+            let domHud = document.querySelector("#hud");
             GameState.instance = this;
-            // GameState.controller = new ƒui.Controller(this, domHud);
-            // console.log("Hud-Controller", GameState.controller);
+            GameState.controller = new ƒui.Controller(this, domHud);
+            console.log("Hud-Controller", GameState.controller);
         }
         static get() {
             return GameState.instance || new GameState();
@@ -227,7 +227,6 @@ var LaserLeague;
     document.addEventListener("interactiveViewportStarted", start);
     let graph;
     let agent;
-    let lasers;
     let getAllLasers;
     let hitSound;
     let gotHit;
@@ -236,16 +235,16 @@ var LaserLeague;
         graph = viewport.getBranch();
         console.log("graph");
         console.log(graph);
+        let domName = document.querySelector("#hud>input");
         agent = new LaserLeague.Agent;
         graph.getChildrenByName("Agents")[0].addChild(agent);
-        let domName = document.querySelector("#hud>input");
+        console.log(domName);
         domName.textContent = agent.name;
         getAllLasers = graph.getChildrenByName("Lasers")[0];
         gotHit = new ƒ.Audio("./Sound/hitSound.wav");
         hitSound = new ƒ.ComponentAudio(gotHit, false, false);
         hitSound.volume = 20;
         putLaserOnArena().then(() => {
-            lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
             ƒ.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         });
         viewport.camera.mtxPivot.translateZ(-20);
@@ -278,6 +277,7 @@ var LaserLeague;
                 if (posLocal.x <= (x) && posLocal.x >= -(x) && posLocal.y <= y && posLocal.y >= 0) {
                     console.log("intersecting");
                     hitSound.play(true);
+                    LaserLeague.GameState.get().health -= 0.1;
                     _agent.getComponent(LaserLeague.AgentComponent).respawn();
                 }
             });

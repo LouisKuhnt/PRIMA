@@ -7,7 +7,6 @@ namespace LaserLeague {
 
   let graph: ƒ.Node;
   let agent: Agent;
-  let lasers: ƒ.Node[];
   let getAllLasers: ƒ.Node;
   let hitSound: ƒ.ComponentAudio;
   let gotHit: ƒ.Audio;
@@ -19,11 +18,11 @@ namespace LaserLeague {
     graph = viewport.getBranch();
     console.log("graph");
     console.log(graph);
+    let domName: HTMLElement = document.querySelector("#hud>input");
 
     agent = new Agent;
     graph.getChildrenByName("Agents")[0].addChild(agent);
-
-    let domName: HTMLElement = document.querySelector("#hud>input");
+    console.log(domName);
     domName.textContent = agent.name;
 
     getAllLasers = graph.getChildrenByName("Lasers")[0];
@@ -33,7 +32,6 @@ namespace LaserLeague {
     hitSound.volume = 20;
 
     putLaserOnArena().then(() => {
-      lasers = graph.getChildrenByName("Lasers")[0].getChildrenByName("Laser");
       ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     });
 
@@ -74,6 +72,7 @@ namespace LaserLeague {
         if (posLocal.x <= (x) && posLocal.x >= -(x) && posLocal.y <= y && posLocal.y >= 0) {
           console.log("intersecting");
           hitSound.play(true);
+          GameState.get().health -= 0.1;
           _agent.getComponent(AgentComponent).respawn();
         }
       });

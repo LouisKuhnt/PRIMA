@@ -1,1 +1,4 @@
 *.tsbuildinfo
+.vs
+.vscode
+package-lock.json
