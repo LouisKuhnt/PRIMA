@@ -1,4 +1,4 @@
-namespace Script {
+/*namespace Script {
   import ƒ = FudgeCore;
   ƒ.Project.registerScriptNamespace(Script);  // Register the namespace to FUDGE for serialization
 
@@ -39,4 +39,4 @@ namespace Script {
     //   // undefined properties and private fields (#) will not be included by default
     // }
   }
-}
+}*/
