@@ -38,12 +38,12 @@ namespace SuperDuperKart {
     
     let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
     ctrForward.setInput(forward * deltaTime);
-    cart.mtxLocal.rotateZ(ctrForward.getOutput());
+    cart.mtxLocal.translateZ(ctrForward.getOutput());
 
     let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(cart.mtxLocal.translation, mtxTerrain);
     cart.mtxLocal.translation = terrainInfo.position;
     cart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, cart.mtxLocal.getZ()), terrainInfo.normal);
-
+    
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
