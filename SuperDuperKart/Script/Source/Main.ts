@@ -42,8 +42,8 @@ namespace SuperDuperKart {
 
     let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(cart.mtxLocal.translation, mtxTerrain);
     cart.mtxLocal.translation = terrainInfo.position;
-    cart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, cart.mtxLocal.getZ()), terrainInfo.normal);
-    
+    cart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, cart.mtxLocal.getY()), terrainInfo.normal);
+
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
