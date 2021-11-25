@@ -24,9 +24,6 @@ namespace SuperDuperKart {
     mtxTerrain = cmpMeshTerrain.mtxWorld;
     cart = viewport.getBranch().getChildrenByName("Kart")[0];
 
-    cart.mtxLocal.translation = new ƒ.Vector3(10,4,41.4);
-    cart.mtxLocal.rotation = new ƒ.Vector3(0,90,0);
-
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
@@ -39,17 +36,17 @@ namespace SuperDuperKart {
     let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
     ctrTurn.setInput(turn * deltaTime);
     cart.mtxLocal.rotateY(ctrTurn.getOutput());
-    console.log("Kart: " + cart);
-    console.log("ctrTurn: " +ctrTurn);
+    //console.log("Kart: " + cart);
+    //console.log("ctrTurn: " +ctrTurn);
     
     let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
     ctrForward.setInput(forward * deltaTime);
-    cart.mtxLocal.translateX(ctrForward.getOutput());
-    console.log("ctrForward: " +ctrForward);
+    cart.mtxLocal.translateZ(ctrForward.getOutput());
+    //console.log("ctrForward: " +ctrForward);
 
     let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(cart.mtxLocal.translation, mtxTerrain);
     cart.mtxLocal.translation = terrainInfo.position;
-    cart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, cart.mtxLocal.getY()), terrainInfo.normal);
+    cart.mtxLocal.showTo(ƒ.Vector3.SUM(terrainInfo.position, cart.mtxLocal.getZ()), terrainInfo.normal);
 
     viewport.draw();
     ƒ.AudioManager.default.update();
