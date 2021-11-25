@@ -3,46 +3,66 @@ namespace SuperDuperKart {
   //import ƒAid = FudgeAid;
   ƒ.Debug.info("Main Program Template running!")
 
+  let graph: ƒ.Graph;
   let viewport: ƒ.Viewport;
-  document.addEventListener("interactiveViewportStarted", <EventListener>start);
+  let camera: ƒ.Node = new ƒ.Node("cameraNode");
+  let cmpCamera = new ƒ.ComponentCamera;
+  let cart: ƒ.Node;
+  let meshTerrain: ƒ.MeshTerrain;
+  let mtxTerrain: ƒ.Matrix4x4;
 
   let ctrForward: ƒ.Control = new ƒ.Control("Forward", 10, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrForward.setDelay(200);
   let ctrTurn: ƒ.Control = new ƒ.Control("Turn", 100, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrTurn.setDelay(50);
 
-  let cart: ƒ.Node;
-  let meshTerrain: ƒ.MeshTerrain;
-  let mtxTerrain: ƒ.Matrix4x4;
+  window.addEventListener("load", start);
 
-  function start(_event: CustomEvent): void {
-    viewport = _event.detail;
-    viewport.calculateTransforms();
+  async function start(_event: Event): Promise<void> {
 
-    let cmpMeshTerrain: ƒ.ComponentMesh = viewport.getBranch().getChildrenByName("Terrain")[0].getComponent(ƒ.ComponentMesh);
+    await ƒ.Project.loadResourcesFromHTML();
+    graph = <ƒ.Graph>ƒ.Project.resources["Graph|2021-11-18T14:33:58.388Z|51314"];
+
+    let cmpMeshTerrain: ƒ.ComponentMesh = graph.getChildrenByName("Terrain")[0].getComponent(ƒ.ComponentMesh);
     meshTerrain = <ƒ.MeshTerrain>cmpMeshTerrain.mesh;
     mtxTerrain = cmpMeshTerrain.mtxWorld;
-    cart = viewport.getBranch().getChildrenByName("Kart")[0];
+    cart = graph.getChildrenByName("Kart")[0];
+
+    cmpCamera.mtxPivot.translation = new ƒ.Vector3(0,8,-12);
+    cmpCamera.mtxPivot.rotation = new ƒ.Vector3(25,0,0);
+
+    camera.addComponent(cmpCamera);
+    camera.addComponent(new ƒ.ComponentTransform());
+    graph.addChild(camera);
+
+    let canvas: HTMLCanvasElement = document.querySelector("canvas");
+    viewport = new ƒ.Viewport();
+    viewport.initialize("Viewport", graph, cmpCamera, canvas);
+
+    viewport.calculateTransforms();
+
+    ƒ.AudioManager.default.listenTo(graph);
+    ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
 
 
   function update(_event: Event): void {
+    //console.log(cart.mtxWorld.translation);
+    camera.mtxLocal.translation = cart.mtxWorld.translation;
+    camera.mtxLocal.rotation = new ƒ.Vector3(0, cart.mtxWorld.rotation.y, 0);
+
     let deltaTime: number = ƒ.Loop.timeFrameReal / 1000;
-    console.log("DeltaTime"+deltaTime);
 
     let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
     ctrTurn.setInput(turn * deltaTime);
     cart.mtxLocal.rotateY(ctrTurn.getOutput());
-    //console.log("Kart: " + cart);
-    //console.log("ctrTurn: " +ctrTurn);
     
     let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
     ctrForward.setInput(forward * deltaTime);
     cart.mtxLocal.translateZ(ctrForward.getOutput());
-    //console.log("ctrForward: " +ctrForward);
 
     let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(cart.mtxLocal.translation, mtxTerrain);
     cart.mtxLocal.translation = terrainInfo.position;
@@ -51,71 +71,4 @@ namespace SuperDuperKart {
     viewport.draw();
     ƒ.AudioManager.default.update();
   }
-
-  /*async function init(_event: Event): Promise<void> {
-    await setupScene();
-
-    //ƒAid.addStandardLightComponents(graph);
-    ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
-  }*/
-
-  /*async function setupScene(): Promise<void> {
-    let coatTexturedMap: ƒ.CoatTextured = new ƒ.CoatTextured();
-
-    let texMap = new ƒ.TextureImage();
-    let heightMap = new ƒ.TextureImage();
-
-    texMap.load("../Textures/maptex.png");
-    coatTexturedMap.texture = texMap;
-
-    //let terrain: ƒ.Node = graph.getChildrenByName("Terrain")[0];
-    //terrain.getComponent(ƒ.ComponentMaterial).material.coat.mutate({coatTexturedMap: texMap,});
-
-    //console.log(terrain.getComponent(ƒ.ComponentMaterial).material);
-
-    let matTex: ƒ.Material = new ƒ.Material("Textured", ƒ.ShaderTexture, coatTexturedMap);
-    viewport = new ƒ.Viewport();
-
-    //cmpCamera = createCamera(new ƒ.Vector3(0, 2, 3.5), new ƒ.Vector3(0, 0, 0));
-
-    heightMap = new ƒ.TextureImage();
-    await heightMap.load("../Textures/map.png");
-
-    gridMeshFlat = new ƒ.MeshRelief("HeightMap", heightMap);
-    gridFlat = createCompleteMeshNode("Grid", matTex, gridMeshFlat);
-    // gridMeshFlat.node = gridFlat;
-    gridFlat.mtxLocal.translateY(-0.1);
-    gridFlat.mtxLocal.scale(new ƒ.Vector3(3, 0.7, 3));
-
-    graph.addChild(gridFlat);
-    //viewport.draw();
-    viewport.initialize("Viewport", graph, viewport.camera, document.querySelector("canvas"));
-    viewport.setFocus(true);
-    viewport.draw();
-  } */
-
-  /*function createCompleteMeshNode(_name: string, _material: ƒ.Material, _mesh: ƒ.Mesh): ƒ.Node {
-    let node: ƒ.Node = new ƒ.Node(_name);
-
-    let cmpMesh: ƒ.ComponentMesh = new ƒ.ComponentMesh(_mesh);
-    let cmpMaterial: ƒ.ComponentMaterial = new ƒ.ComponentMaterial(_material);
-    let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform();
-    node.addComponent(cmpMesh);
-    node.addComponent(cmpMaterial);
-    node.addComponent(cmpTransform);
-    return node;
-  }*/
-
-  /*function createCamera(_translation: ƒ.Vector3 = new ƒ.Vector3(1, 1, 10), _lookAt: ƒ.Vector3 = new ƒ.Vector3()): ƒ.ComponentCamera {
-    let cmpCamera: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-    cmpCamera.projectCentral(1, 45, ƒ.FIELD_OF_VIEW.DIAGONAL);
-    cmpCamera.mtxPivot.translate(_translation);
-    cmpCamera.mtxPivot.lookAt(_lookAt);
-    return cmpCamera;
-    // camera.addComponent(cmpCamera);
-    // camera.addComponent(cmpTransform);
-    // // let cmpCamera: ƒ.ComponentCamera = new ƒ.Node("Camera");
-    // let cmpTransform: ƒ.ComponentTransform = new ƒ.ComponentTransform();
-  }*/
 }
