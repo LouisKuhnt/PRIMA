@@ -111,6 +111,15 @@
       }
     }
   },
+  "MeshSphere|2021-11-25T14:57:47.972Z|30744": {
+    "ƒ.MeshSphere": {
+      "idResource": "MeshSphere|2021-11-25T14:57:47.972Z|30744",
+      "name": "meshWheel",
+      "type": "MeshSphere",
+      "sectors": 8,
+      "stacks": 8
+    }
+  },
   "Graph|2021-11-18T14:33:58.388Z|51314": {
     "ƒ.Graph": {
       "name": "Graph",
@@ -238,12 +247,37 @@
                     }
                   }
                 }
+              ],
+              "ComponentRigidbody": [
+                {
+                  "ƒ.ComponentRigidbody": {
+                    "initialization": "TO_MESH",
+                    "friction": 0.2,
+                    "restitution": 0.2,
+                    "mass": 200,
+                    "dampTranslation": 3,
+                    "dampRotation": 100,
+                    "effectGravity": 1,
+                    "typeBody": "DYNAMIC",
+                    "typeCollider": "CUBE",
+                    "isTrigger": false,
+                    "id": 0,
+                    "pivot": {
+                      "translation": "[0, 0.30000007152557373, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[0.9999998807907104, 0.30000001192092896, 1.5000001192092896]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
               ]
             },
             "children": [
               {
                 "ƒ.Node": {
-                  "name": "Wheel",
+                  "name": "LeftFrontWheel",
                   "components": {
                     "ComponentMesh": [
                       {
@@ -284,14 +318,14 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "Wheel",
+                  "name": "LeftBackWheel",
                   "components": {
                     "ComponentMesh": [
                       {
                         "ƒ.ComponentMesh": {
                           "idMesh": "MeshSphere|2021-11-25T14:57:47.972Z|30744",
                           "pivot": {
-                            "translation": "[0.49999991059303284, 0.10000001639127731, -0.6000000238418579]",
+                            "translation": "[0.5, 0.10000001639127731, -0.6000000238418579]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[0.12999999523162842, 0.2999999225139618, 0.29999998211860657]"
                           },
@@ -325,7 +359,7 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "Wheel",
+                  "name": "RightFrontWheel",
                   "components": {
                     "ComponentMesh": [
                       {
@@ -366,7 +400,7 @@
               },
               {
                 "ƒ.Node": {
-                  "name": "Wheel",
+                  "name": "RightBackWheel",
                   "components": {
                     "ComponentMesh": [
                       {
@@ -581,15 +615,6 @@
       "children": [],
       "idResource": "Graph|2021-11-22T16:38:32.957Z|32964",
       "type": "Graph"
-    }
-  },
-  "MeshSphere|2021-11-25T14:57:47.972Z|30744": {
-    "ƒ.MeshSphere": {
-      "idResource": "MeshSphere|2021-11-25T14:57:47.972Z|30744",
-      "name": "meshWheel",
-      "type": "MeshSphere",
-      "sectors": 8,
-      "stacks": 8
     }
   }
 }
