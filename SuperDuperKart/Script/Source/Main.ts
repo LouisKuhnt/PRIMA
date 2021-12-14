@@ -15,20 +15,20 @@ namespace SuperDuperKart {
   let dampTranslation: number;
   let dampRotation: number;
 
-  let maxHeight: number = 0.3;
-  let minHeight: number = 0.2;
+  let maxHeight: number = 0.8;
+  let minHeight: number = 0.5;
 
-  let ctrForward: ƒ.Control = new ƒ.Control("Forward", 100, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  let ctrForward: ƒ.Control = new ƒ.Control("Forward", 18000, ƒ.CONTROL_TYPE.PROPORTIONAL);
   ctrForward.setDelay(200);
-  let ctrTurn: ƒ.Control = new ƒ.Control("Turn", 10, ƒ.CONTROL_TYPE.PROPORTIONAL);
-  ctrTurn.setDelay(50);
+  let ctrTurn: ƒ.Control = new ƒ.Control("Turn", 150, ƒ.CONTROL_TYPE.PROPORTIONAL);
+  ctrTurn.setDelay(300);
 
   window.addEventListener("load", start);
 
   async function start(_event: Event): Promise<void> {
-
     await ƒ.Project.loadResourcesFromHTML();
     graph = <ƒ.Graph>ƒ.Project.resources["Graph|2021-11-18T14:33:58.388Z|51314"];
+
 
     let cmpMeshTerrain: ƒ.ComponentMesh = graph.getChildrenByName("Terrain")[0].getComponent(ƒ.ComponentMesh);
     meshTerrain = <ƒ.MeshTerrain>cmpMeshTerrain.mesh;
@@ -49,20 +49,20 @@ namespace SuperDuperKart {
     viewport = new ƒ.Viewport();
     viewport.initialize("Viewport", graph, cmpCamera, canvas);
 
-    viewport.calculateTransforms();
-
     ƒ.AudioManager.default.listenTo(graph);
     ƒ.AudioManager.default.listenWith(graph.getComponent(ƒ.ComponentAudioListener));
 
+    viewport.calculateTransforms();
+
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
-    ƒ.Loop.start(ƒ.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+    ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
 
 
   function update(_event: Event): void {
     camera.mtxLocal.translation = cart.mtxWorld.translation;
     camera.mtxLocal.rotation = new ƒ.Vector3(0, cart.mtxWorld.rotation.y, 0);
-    let deltaTime: number = ƒ.Loop.timeFrameReal / 1000;
+    //let deltaTime: number = ƒ.Loop.timeFrameReal / 1000;
     let forceNodes: ƒ.Node[] = cart.getChildren();
     let force: ƒ.Vector3 = ƒ.Vector3.SCALE(ƒ.Physics.world.getGravity(), -body.mass / forceNodes.length);
 
@@ -83,12 +83,12 @@ namespace SuperDuperKart {
       body.dampRotation = dampRotation;
 
       let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
-      ctrTurn.setInput(turn * deltaTime);
-      cart.mtxLocal.rotateY(ctrTurn.getOutput());
-    
+      ctrTurn.setInput(turn);
+      body.applyTorque(ƒ.Vector3.SCALE(cart.mtxLocal.getY(), ctrTurn.getOutput()));
+      
       let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
-      ctrForward.setInput(forward * deltaTime);
-      cart.mtxLocal.translateZ(ctrForward.getOutput());
+      ctrForward.setInput(forward);
+      body.applyForce(ƒ.Vector3.SCALE(cart.mtxLocal.getZ(), ctrForward.getOutput()));
 
       /*let terrainInfo: ƒ.TerrainInfo = meshTerrain.getTerrainInfo(cart.mtxLocal.translation, mtxTerrain);
       cart.mtxLocal.translation = terrainInfo.position;

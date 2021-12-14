@@ -255,8 +255,8 @@
                     "friction": 0.2,
                     "restitution": 0.2,
                     "mass": 200,
-                    "dampTranslation": 3,
-                    "dampRotation": 100,
+                    "dampTranslation": 20,
+                    "dampRotation": 33,
                     "effectGravity": 1,
                     "typeBody": "DYNAMIC",
                     "typeCollider": "CUBE",
@@ -311,6 +311,20 @@
                           "idMaterial": "Material|2021-11-25T14:48:51.061Z|23517"
                         }
                       }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
                     ]
                   },
                   "children": []
@@ -325,7 +339,7 @@
                         "ƒ.ComponentMesh": {
                           "idMesh": "MeshSphere|2021-11-25T14:57:47.972Z|30744",
                           "pivot": {
-                            "translation": "[0.5, 0.10000001639127731, -0.6000000238418579]",
+                            "translation": "[0.5, 0.10000000149011612, -0.6000000238418579]",
                             "rotation": "[0, 0, 0]",
                             "scaling": "[0.12999999523162842, 0.2999999225139618, 0.29999998211860657]"
                           },
@@ -352,6 +366,20 @@
                           "idMaterial": "Material|2021-11-25T14:48:51.061Z|23517"
                         }
                       }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
                     ]
                   },
                   "children": []
@@ -368,7 +396,7 @@
                           "pivot": {
                             "translation": "[-0.5, 0.10000000149011612, 0.6000000238418579]",
                             "rotation": "[0, 0, 0]",
-                            "scaling": "[0.12999999523162842, 0.2999999523162842, 0.30000001192092896]"
+                            "scaling": "[0.12999999523162842, 0.30000001192092896, 0.30000001192092896]"
                           },
                           "Component": {
                             "active": true
@@ -391,6 +419,20 @@
                             "active": true
                           },
                           "idMaterial": "Material|2021-11-25T14:48:51.061Z|23517"
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
                         }
                       }
                     ]
@@ -432,6 +474,20 @@
                             "active": true
                           },
                           "idMaterial": "Material|2021-11-25T14:48:51.061Z|23517"
+                        }
+                      }
+                    ],
+                    "ComponentTransform": [
+                      {
+                        "ƒ.ComponentTransform": {
+                          "local": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[1, 1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
                         }
                       }
                     ]
