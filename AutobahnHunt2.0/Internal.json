@@ -203,7 +203,33 @@
     "ƒ.Graph": {
       "name": "Game",
       "active": true,
-      "components": {},
+      "components": {
+        "ComponentCamera": [
+          {
+            "ƒ.ComponentCamera": {
+              "backgroundColor": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "backgroundEnabled": true,
+              "projection": "central",
+              "fieldOfView": 45,
+              "direction": "diagonal",
+              "aspect": 1,
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": false
+              }
+            }
+          }
+        ]
+      },
       "children": [
         {
           "ƒ.GraphInstance": {
@@ -635,8 +661,33 @@
                 "breakTorque": 0,
                 "anchor": "[0, 0, 0]",
                 "Component": {
-                  "active": false
+                  "active": true
                 }
+              }
+            }
+          }
+        ],
+        "ComponentCamera": [
+          {
+            "ƒ.ComponentCamera": {
+              "backgroundColor": {
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 1
+              },
+              "backgroundEnabled": true,
+              "projection": "central",
+              "fieldOfView": 45,
+              "direction": "horizontal",
+              "aspect": 1,
+              "pivot": {
+                "translation": "[32, 16, 15]",
+                "rotation": "[18, 18, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "Component": {
+                "active": true
               }
             }
           }
