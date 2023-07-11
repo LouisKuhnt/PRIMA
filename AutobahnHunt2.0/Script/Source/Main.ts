@@ -6,6 +6,7 @@ namespace Script {
   export let viewport: ƒ.Viewport;
   export let limit_z: number;
   export let limit_x: number;
+  export let ui: VisualInterface;
   let playerModel: ƒ.Node;
 
   ƒ.Debug.info("Main Program Template running!");
@@ -24,6 +25,10 @@ namespace Script {
     playerModel = graph.getChildrenByName("PlayerCar")[0];
     console.log("test");
     console.log(playerModel);
+
+    ui = new VisualInterface();
+    ui.highscore = 0;
+    ui.lives = 3;
   
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
