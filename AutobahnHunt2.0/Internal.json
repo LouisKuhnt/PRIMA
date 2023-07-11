@@ -617,8 +617,8 @@
                     "direction": "diagonal",
                     "aspect": 1.6728395061728396,
                     "pivot": {
-                      "translation": "[50, 0, 10]",
-                      "rotation": "[25, 0, 0]",
+                      "translation": "[-142, 62, 0]",
+                      "rotation": "[0, 90, -12]",
                       "scaling": "[1, 1, 1]"
                     },
                     "Component": {
