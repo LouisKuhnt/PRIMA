@@ -478,5 +478,111 @@
       "idResource": "Graph|2023-07-11T07:27:54.495Z|79231",
       "type": "Graph"
     }
+  },
+  "Graph|2023-07-11T10:14:56.917Z|50439": {
+    "ƒ.Graph": {
+      "name": "Street",
+      "active": true,
+      "components": {
+        "ComponentLight": [
+          {
+            "ƒ.ComponentLight": {
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "light": {
+                "ƒ.LightAmbient": {
+                  "color": "[1, 1, 1, 1]"
+                }
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "Asphalt",
+            "active": true,
+            "components": {
+              "ComponentMesh": [
+                {
+                  "ƒ.ComponentMesh": {
+                    "idMesh": "MeshRelief|2023-07-11T10:18:59.309Z|94266",
+                    "pivot": {
+                      "translation": "[0, 0, 0]",
+                      "rotation": "[0, 0, 0]",
+                      "scaling": "[25, 1, 100]"
+                    },
+                    "Component": {
+                      "active": true
+                    }
+                  }
+                }
+              ],
+              "ComponentMaterial": [
+                {
+                  "ƒ.ComponentMaterial": {
+                    "sortForAlpha": false,
+                    "clrPrimary": "[1, 1, 1, 1]",
+                    "clrSecondary": "[1, 1, 1, 1]",
+                    "pivot": {
+                      "translation": "[0, 0]",
+                      "rotation": 0,
+                      "scaling": "[1, 1]"
+                    },
+                    "Component": {
+                      "active": true
+                    },
+                    "idMaterial": "Material|2023-07-11T10:25:45.212Z|78969"
+                  }
+                }
+              ]
+            },
+            "children": []
+          }
+        }
+      ],
+      "idResource": "Graph|2023-07-11T10:14:56.917Z|50439",
+      "type": "Graph"
+    }
+  },
+  "MeshRelief|2023-07-11T10:18:59.309Z|94266": {
+    "ƒ.MeshRelief": {
+      "idResource": "MeshRelief|2023-07-11T10:18:59.309Z|94266",
+      "name": "Asphalt",
+      "type": "MeshRelief"
+    }
+  },
+  "Material|2023-07-11T10:25:45.212Z|78969": {
+    "ƒ.Material": {
+      "name": "AsphaltTexture",
+      "idResource": "Material|2023-07-11T10:25:45.212Z|78969",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-11T10:34:24.738Z|99673",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-11T10:34:24.738Z|99673": {
+    "ƒ.TextureImage": {
+      "url": "asphalt_color.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-11T10:34:24.738Z|99673",
+        "name": "asphalt_color.png",
+        "mipmap": "CRISP"
+      }
+    }
   }
 }
