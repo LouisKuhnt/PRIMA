@@ -3,7 +3,7 @@ namespace FudgeUserInterface {
 
   export class DetailsArray extends Details {
 
-    constructor(_legend: string) {
+    public constructor(_legend: string) {
       super(_legend, "Array");
     }
 
@@ -28,7 +28,8 @@ namespace FudgeUserInterface {
       _child.addEventListener(EVENT.DRAG_START, this.hndDragStart);
       _child.addEventListener(EVENT.DROP, this.hndDrop);
       _child.addEventListener(EVENT.DRAG_OVER, this.hndDragOver);
-      _child.addEventListener(EVENT.KEY_DOWN, this.hndkey, true);
+      _child.addEventListener(EVENT.KEY_DOWN, this.hndKeySpecial);
+      _child.addEventListener(EVENT.INSERT, this.hndInsert);
       _child.tabIndex = 0;
     }
 
@@ -43,20 +44,22 @@ namespace FudgeUserInterface {
       let count: number = 0;
       for (let child of this.content.children as HTMLCollectionOf<CustomElement>) {
         child.setAttribute("label", count.toString());
-        child.setAttribute("key", "ƒ" + count);
-        child.setLabel(count.toString());
+        child.setAttribute("key", count.toString());
+        if (child.setLabel)
+          child.setLabel(count.toString());
         console.log(child.tabIndex);
         count++;
       }
 
-      this.dispatchEvent(new Event(EVENT.INPUT, { bubbles: true }));
+      this.dispatchEvent(new Event(EVENT.MUTATE, { bubbles: true }));
     }
 
     private setFocus(_focus: number = undefined): void {
       if (_focus == undefined)
         return;
       _focus = Math.max(0, Math.min(_focus, this.content.children.length - 1));
-      (<HTMLElement>this.content.children[_focus]).focus();
+      let child: HTMLElement = <HTMLElement>this.content.children[_focus];
+      child?.focus();
     }
 
     private hndDragStart = (_event: DragEvent): void => {
@@ -64,7 +67,7 @@ namespace FudgeUserInterface {
       let keyDrag: string = (<HTMLElement>_event.currentTarget).getAttribute("key");
       _event.dataTransfer.setData("index", keyDrag);
       console.log(keyDrag);
-    }
+    };
 
     private hndDragOver = (_event: DragEvent): void => {
       _event.preventDefault();
@@ -72,17 +75,20 @@ namespace FudgeUserInterface {
         _event.dataTransfer.dropEffect = "copy";
       if (_event.shiftKey)
         _event.dataTransfer.dropEffect = "link";
-    }
+    };
 
     private hndDrop = (_event: DragEvent): void => {
       let drop: HTMLElement = <HTMLElement>_event.currentTarget;
       let keyDrop: string = drop.getAttribute("key");
       let keyDrag: string = _event.dataTransfer.getData("index");
-      let drag: HTMLElement = this.querySelector(`[key=${keyDrag}]`);
+      let drag: HTMLElement = this.querySelector(`[key="${keyDrag}"]`);
+      let labelDrag: string = drag.getAttribute("label");
 
       let position: InsertPosition = keyDrag > keyDrop ? "beforebegin" : "afterend";
       if (_event.ctrlKey)
         drag = <HTMLElement>drag.cloneNode(true);
+      drag.setAttribute("label", labelDrag);
+
       if (_event.shiftKey)
         drag.parentNode.removeChild(drag);
       else
@@ -91,13 +97,18 @@ namespace FudgeUserInterface {
       this.rearrange();
       this.addEventListeners(drag);
       drag.focus();
-    }
+    };
 
-    private hndkey = (_event: KeyboardEvent): void => {
+
+    private hndInsert = (_event: Event): void => {
+      console.log("hndInsert");
+    };
+
+    private hndKeySpecial = (_event: KeyboardEvent): void => {
       let item: HTMLElement = <HTMLElement>_event.currentTarget;
 
       // only work on items of list, not their children
-      if ((<HTMLElement>_event.target) != item)
+      if ((<HTMLElement>_event.target) != item && _event.code != ƒ.KEYBOARD_CODE.DELETE)
         return;
 
       let focus: number = parseInt(item.getAttribute("label"));
@@ -110,6 +121,10 @@ namespace FudgeUserInterface {
           item.parentNode.removeChild(item);
           this.rearrange(focus);
           break;
+        // case ƒ.KEYBOARD_CODE.INSERT:
+        //   passEvent = true;
+        //   console.log("INSERT at DetailsArray");
+        //   break;
         case ƒ.KEYBOARD_CODE.ARROW_UP:
           if (!_event.altKey) {
             this.setFocus(--focus);
@@ -117,6 +132,7 @@ namespace FudgeUserInterface {
           }
           if (_event.shiftKey) {
             insert = <HTMLElement>item.cloneNode(true);
+            insert.setAttribute("label", item.getAttribute("label"));
             this.addEventListeners(insert);
           } else
             sibling = <HTMLElement>item.previousSibling;
@@ -131,6 +147,7 @@ namespace FudgeUserInterface {
           }
           if (_event.shiftKey) {
             insert = <HTMLElement>item.cloneNode(true);
+            insert.setAttribute("label", item.getAttribute("label"));
             this.addEventListeners(insert);
           } else
             sibling = <HTMLElement>item.nextSibling;
@@ -145,7 +162,7 @@ namespace FudgeUserInterface {
       if (!passEvent) {
         _event.stopPropagation();
       }
-    }
+    };
   }
 
   customElements.define("ui-list", DetailsArray, { extends: "details" });

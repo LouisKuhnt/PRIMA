@@ -4,7 +4,9 @@ namespace FudgeUserInterface {
     DOUBLE_CLICK = "dblclick",
     KEY_DOWN = "keydown",
     DRAG_START = "dragstart",
+    DRAG_ENTER = "dragenter",
     DRAG_OVER = "dragover",
+    DRAG_LEAVE = "dragleave",
     DROP = "drop",
     POINTER_UP = "pointerup",
     WHEEL = "wheel",
@@ -31,6 +33,7 @@ namespace FudgeUserInterface {
     INPUT = "input",
     REARRANGE_ARRAY = "rearrangeArray",
     TOGGLE = "toggle",
-    POINTER_MOVE = "pointermove"
+    POINTER_MOVE = "pointermove",
+    INSERT = "insert"
   }
 }

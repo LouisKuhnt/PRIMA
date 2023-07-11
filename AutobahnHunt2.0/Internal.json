@@ -1,0 +1,482 @@
+{
+  "MeshCube|2023-07-11T07:28:47.720Z|28250": {
+    "ƒ.MeshCube": {
+      "idResource": "MeshCube|2023-07-11T07:28:47.720Z|28250",
+      "name": "CarChassis",
+      "type": "MeshCube"
+    }
+  },
+  "Material|2023-07-11T08:10:52.406Z|26425": {
+    "ƒ.Material": {
+      "name": "ChassisColor",
+      "idResource": "Material|2023-07-11T08:10:52.406Z|26425",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-11T08:13:29.267Z|43140",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-11T08:13:29.267Z|43140": {
+    "ƒ.TextureImage": {
+      "url": "playercar_color.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-11T08:13:29.267Z|43140",
+        "name": "playercar_color.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Material|2023-07-11T08:22:45.147Z|25166": {
+    "ƒ.Material": {
+      "name": "UpperChassisColor",
+      "idResource": "Material|2023-07-11T08:22:45.147Z|25166",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-11T08:23:03.105Z|04457",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-11T08:23:03.105Z|04457": {
+    "ƒ.TextureImage": {
+      "url": "playcarupper_color.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-11T08:23:03.105Z|04457",
+        "name": "playcarupper_color.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshSphere|2023-07-11T08:31:21.507Z|47873": {
+    "ƒ.MeshSphere": {
+      "idResource": "MeshSphere|2023-07-11T08:31:21.507Z|47873",
+      "name": "CarTyre",
+      "type": "MeshSphere",
+      "longitudes": 8,
+      "latitudes": 8
+    }
+  },
+  "Material|2023-07-11T08:31:46.844Z|49725": {
+    "ƒ.Material": {
+      "name": "TyreColor",
+      "idResource": "Material|2023-07-11T08:31:46.844Z|49725",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-11T08:44:24.993Z|06352",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-11T08:44:24.993Z|06352": {
+    "ƒ.TextureImage": {
+      "url": "playcartyre_last_color.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-11T08:44:24.993Z|06352",
+        "name": "playcartyre_last_color.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "Graph|2023-07-11T07:27:54.495Z|79231": {
+    "ƒ.Graph": {
+      "name": "PlayerCar",
+      "active": true,
+      "components": {
+        "ComponentLight": [
+          {
+            "ƒ.ComponentLight": {
+              "pivot": {
+                "translation": "[0, 0, 0]",
+                "rotation": "[0, 0, 0]",
+                "scaling": "[1, 1, 1]"
+              },
+              "light": {
+                "ƒ.LightAmbient": {
+                  "color": "[1, 1, 1, 1]"
+                }
+              },
+              "Component": {
+                "active": true
+              }
+            }
+          }
+        ]
+      },
+      "children": [
+        {
+          "ƒ.Node": {
+            "name": "CarBody",
+            "active": true,
+            "components": {},
+            "children": [
+              {
+                "ƒ.Node": {
+                  "name": "LowerCarBody",
+                  "active": true,
+                  "components": {
+                    "ComponentMesh": [
+                      {
+                        "ƒ.ComponentMesh": {
+                          "idMesh": "MeshCube|2023-07-11T07:28:47.720Z|28250",
+                          "pivot": {
+                            "translation": "[0, 0, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[25, 5, 12]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentMaterial": [
+                      {
+                        "ƒ.ComponentMaterial": {
+                          "sortForAlpha": false,
+                          "clrPrimary": "[1, 1, 1, 1]",
+                          "clrSecondary": "[1, 1, 1, 1]",
+                          "pivot": {
+                            "translation": "[0, 0]",
+                            "rotation": 0,
+                            "scaling": "[1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          },
+                          "idMaterial": "Material|2023-07-11T08:10:52.406Z|26425"
+                        }
+                      }
+                    ]
+                  },
+                  "children": []
+                }
+              },
+              {
+                "ƒ.Node": {
+                  "name": "UpperCarBody",
+                  "active": true,
+                  "components": {
+                    "ComponentMesh": [
+                      {
+                        "ƒ.ComponentMesh": {
+                          "idMesh": "MeshCube|2023-07-11T07:28:47.720Z|28250",
+                          "pivot": {
+                            "translation": "[-2.4989988803863525, 3, 0]",
+                            "rotation": "[0, 0, 0]",
+                            "scaling": "[13, 5, 10]"
+                          },
+                          "Component": {
+                            "active": true
+                          }
+                        }
+                      }
+                    ],
+                    "ComponentMaterial": [
+                      {
+                        "ƒ.ComponentMaterial": {
+                          "sortForAlpha": false,
+                          "clrPrimary": "[1, 1, 1, 1]",
+                          "clrSecondary": "[1, 1, 1, 1]",
+                          "pivot": {
+                            "translation": "[0, 0]",
+                            "rotation": 0,
+                            "scaling": "[1, 1]"
+                          },
+                          "Component": {
+                            "active": true
+                          },
+                          "idMaterial": "Material|2023-07-11T08:22:45.147Z|25166"
+                        }
+                      }
+                    ]
+                  },
+                  "children": [
+                    {
+                      "ƒ.Node": {
+                        "name": "FlateningFront",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshCube|2023-07-11T07:28:47.720Z|28250",
+                                "pivot": {
+                                  "translation": "[7.099999904632568, 2.2299997806549072, 0]",
+                                  "rotation": "[0, 0, -14]",
+                                  "scaling": "[9.7990083694458, 4, 9.500001907348633]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:22:45.147Z|25166"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "FlateningBack",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshCube|2023-07-11T07:28:47.720Z|28250",
+                                "pivot": {
+                                  "translation": "[-9.800002098083496, 2.59999942779541, 0]",
+                                  "rotation": "[0, 0, 33]",
+                                  "scaling": "[4.59999942779541, 3.3989992141723633, 9]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:22:45.147Z|25166"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "ƒ.Node": {
+                  "name": "Tyres",
+                  "active": true,
+                  "components": {},
+                  "children": [
+                    {
+                      "ƒ.Node": {
+                        "name": "RightFrontTyre",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshSphere|2023-07-11T08:31:21.507Z|47873",
+                                "pivot": {
+                                  "translation": "[8, -2, 6.2990007400512695]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[3.9989988803863525, 3.9989991188049316, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "LeftFrontTyre",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshSphere|2023-07-11T08:31:21.507Z|47873",
+                                "pivot": {
+                                  "translation": "[8, -2, -6.299999713897705]",
+                                  "rotation": "[0, 180, 0]",
+                                  "scaling": "[4, 4, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "RightBackTyre",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshSphere|2023-07-11T08:31:21.507Z|47873",
+                                "pivot": {
+                                  "translation": "[-9, -2, -6.299999713897705]",
+                                  "rotation": "[0, 180, 0]",
+                                  "scaling": "[4, 4, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "ƒ.Node": {
+                        "name": "LeftBackTyre",
+                        "active": true,
+                        "components": {
+                          "ComponentMesh": [
+                            {
+                              "ƒ.ComponentMesh": {
+                                "idMesh": "MeshSphere|2023-07-11T08:31:21.507Z|47873",
+                                "pivot": {
+                                  "translation": "[-9, -2, 6.299999713897705]",
+                                  "rotation": "[0, 0, 0]",
+                                  "scaling": "[4, 4, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                }
+                              }
+                            }
+                          ],
+                          "ComponentMaterial": [
+                            {
+                              "ƒ.ComponentMaterial": {
+                                "sortForAlpha": false,
+                                "clrPrimary": "[1, 1, 1, 1]",
+                                "clrSecondary": "[1, 1, 1, 1]",
+                                "pivot": {
+                                  "translation": "[0, 0]",
+                                  "rotation": 0,
+                                  "scaling": "[1, 1]"
+                                },
+                                "Component": {
+                                  "active": true
+                                },
+                                "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
+                              }
+                            }
+                          ]
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "idResource": "Graph|2023-07-11T07:27:54.495Z|79231",
+      "type": "Graph"
+    }
+  }
+}

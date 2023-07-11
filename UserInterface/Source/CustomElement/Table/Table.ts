@@ -18,12 +18,14 @@ namespace FudgeUserInterface {
   export class Table<T extends Object> extends HTMLTableElement {
     public controller: TableController<T>;
     public data: T[];
+    public icon: string;
 
-    constructor(_controller: TableController<T>, _data: T[]) {
+    constructor(_controller: TableController<T>, _data: T[], _icon?: string) {
       super();
       this.controller = _controller;
       this.data = _data;
-      this.create(); 
+      this.icon = _icon;
+      this.create();
       this.className = "sortable";
 
       this.addEventListener(EVENT.SORT, <EventListener>this.hndSort);
@@ -52,6 +54,9 @@ namespace FudgeUserInterface {
       for (let row of this.data) {
         // tr = this.createRow(row, head);
         let item: TableItem<T> = new TableItem<T>(this.controller, row);
+        // TODO: see if icon consideration should move to TableItem
+        if (this.icon)
+          item.setAttribute("icon", Reflect.get(row, this.icon));
         this.appendChild(item);
       }
     }
@@ -190,12 +195,12 @@ namespace FudgeUserInterface {
     //   // this.addChildren(this.controller.dragDrop.sources, this.controller.dragDrop.target);
     // }
 
-    private hndDelete = (_event: Event): void => {
+    private hndDelete = async (_event: Event): Promise<void> => {
       let target: TableItem<T> = <TableItem<T>>_event.target;
       _event.stopPropagation();
-      let remove: T[] = this.controller.delete([target.data]);
-      console.log(remove);
-      // this.delete(remove);
+      let deleted: T[] = await this.controller.delete([target.data]);
+      if (deleted.length)
+        this.dispatchEvent(new Event(EVENT.REMOVE_CHILD, { bubbles: true }));
     }
 
     private hndEscape = (_event: Event): void => {

@@ -1,0 +1,60 @@
+html, body {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+ overflow: hidden;
+}
+
+dialog { 
+  text-align: center; 
+}
+
+canvas.fullscreen { 
+  width: 100vw; 
+  height: 100vh; 
+}
+
+#stats {
+  position: absolute;
+  color: blue;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  top: 5%;
+  left: 3%;
+  border: white;
+}
+
+ul.no-bullets {
+  list-style-type: none;
+  /* Remove bullets */
+  padding: 0;
+  /* Remove padding */
+  margin: 0;
+  /* Remove margins */
+}
+
+input {
+  background: transparent;
+  color: green;
+  border: none;
+  font-size: 20px;
+}
+
+#deathscreen {
+  padding-top: 5%;
+  display: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 5%;
+}
+
+#deathscreen p {
+  font-size: 10ex;
+  color: white;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
