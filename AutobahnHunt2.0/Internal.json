@@ -661,7 +661,7 @@
                 "breakTorque": 0,
                 "anchor": "[0, 0, 0]",
                 "Component": {
-                  "active": true
+                  "active": false
                 }
               }
             }
