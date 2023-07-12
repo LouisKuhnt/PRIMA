@@ -4,7 +4,6 @@ namespace Script {
 
     let dialog: HTMLDialogElement;
     function init(_event: Event): void {
-        console.log("test init");
         dialog = document.querySelector("dialog");
         dialog.querySelector("h1").textContent = document.title;
         dialog.addEventListener("click", function (_event: Event): void {

@@ -126,6 +126,59 @@
       }
     }
   },
+  "AnimationSprite|2023-07-11T16:54:47.353Z|07322": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
+      "idTexture": "TextureImage|2023-07-11T16:55:27.151Z|69486",
+      "frames": 25,
+      "wrapAfter": 12,
+      "start": "[0, 0]",
+      "size": "[125, 500]",
+      "next": "[125, 0]",
+      "wrap": "[0, 0]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
+        "name": "StreetSprite",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 8,
+        "animationStructure": {}
+      }
+    }
+  },
+  "TextureImage|2023-07-11T16:55:27.151Z|69486": {
+    "ƒ.TextureImage": {
+      "url": "Street_Sprite_Besser.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-11T16:55:27.151Z|69486",
+        "name": "Street_Sprite_Besser.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "MeshSprite|2023-07-11T17:05:22.222Z|41740": {
+    "ƒ.MeshSprite": {
+      "idResource": "MeshSprite|2023-07-11T17:05:22.222Z|41740",
+      "name": "AsphaltSprite",
+      "type": "MeshSprite"
+    }
+  },
+  "Material|2023-07-11T17:36:06.343Z|09677": {
+    "ƒ.Material": {
+      "name": "ShaderFlatTextured",
+      "idResource": "Material|2023-07-11T17:36:06.343Z|09677",
+      "shader": "ShaderFlatTextured",
+      "coat": {
+        "ƒ.CoatRemissiveTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-11T16:55:27.151Z|69486",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
   "Graph|2023-07-11T10:14:56.917Z|50439": {
     "ƒ.Graph": {
       "name": "Street",
@@ -160,15 +213,30 @@
               "ComponentMesh": [
                 {
                   "ƒ.ComponentMesh": {
-                    "idMesh": "MeshRelief|2023-07-11T10:18:59.309Z|94266",
+                    "idMesh": "MeshSprite|2023-07-11T17:05:22.222Z|41740",
                     "pivot": {
-                      "translation": "[0, 0, 0]",
-                      "rotation": "[0, 0, 0]",
-                      "scaling": "[100, 0, 300]"
+                      "translation": "[0, 0, 50]",
+                      "rotation": "[90, 0, 0]",
+                      "scaling": "[100.00000762939453, 400, 1]"
                     },
                     "Component": {
                       "active": true
                     }
+                  }
+                }
+              ],
+              "ComponentAnimator": [
+                {
+                  "ƒ.ComponentAnimator": {
+                    "Component": {
+                      "active": true
+                    },
+                    "idAnimation": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
+                    "playmode": "loop",
+                    "quantization": "frames",
+                    "scale": 1,
+                    "scaleWithGameTime": true,
+                    "animateInEditor": false
                   }
                 }
               ],
@@ -181,12 +249,12 @@
                     "pivot": {
                       "translation": "[0, 0]",
                       "rotation": 0,
-                      "scaling": "[1, 1]"
+                      "scaling": "[0.0833333358168602, 1]"
                     },
                     "Component": {
                       "active": true
                     },
-                    "idMaterial": "Material|2023-07-11T10:25:45.212Z|78969"
+                    "idMaterial": "Material|2023-07-11T17:36:06.343Z|09677"
                   }
                 }
               ]
