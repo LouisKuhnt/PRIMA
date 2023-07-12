@@ -61,8 +61,8 @@ namespace Script {
     viewport.camera = cameraComponent;
     //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
     viewport.camera.mtxPivot.rotateX(10);
-    viewport.camera.mtxPivot.translateZ(-340);
-    viewport.camera.mtxPivot.translateY(30);
+    viewport.camera.mtxPivot.translateZ(-405);
+    viewport.camera.mtxPivot.translateY(-40);
     viewport.camera.mtxPivot.translateX(0);
     cameraNode.addComponent(cameraComponent);
   }

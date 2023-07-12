@@ -100,63 +100,6 @@
       "type": "MeshRelief"
     }
   },
-  "Material|2023-07-11T10:25:45.212Z|78969": {
-    "ƒ.Material": {
-      "name": "AsphaltTexture",
-      "idResource": "Material|2023-07-11T10:25:45.212Z|78969",
-      "shader": "ShaderFlatTextured",
-      "coat": {
-        "ƒ.CoatRemissiveTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-11T10:34:24.738Z|99673",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "TextureImage|2023-07-11T10:34:24.738Z|99673": {
-    "ƒ.TextureImage": {
-      "url": "asphalt_color.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-11T10:34:24.738Z|99673",
-        "name": "asphalt_color.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "AnimationSprite|2023-07-11T16:54:47.353Z|07322": {
-    "ƒ.AnimationSprite": {
-      "idResource": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
-      "idTexture": "TextureImage|2023-07-11T16:55:27.151Z|69486",
-      "frames": 25,
-      "wrapAfter": 12,
-      "start": "[0, 0]",
-      "size": "[125, 500]",
-      "next": "[125, 0]",
-      "wrap": "[0, 0]",
-      "Animation": {
-        "idResource": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
-        "name": "StreetSprite",
-        "labels": {},
-        "events": {},
-        "framesPerSecond": 8,
-        "animationStructure": {}
-      }
-    }
-  },
-  "TextureImage|2023-07-11T16:55:27.151Z|69486": {
-    "ƒ.TextureImage": {
-      "url": "Street_Sprite_Besser.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-11T16:55:27.151Z|69486",
-        "name": "Street_Sprite_Besser.png",
-        "mipmap": "CRISP"
-      }
-    }
-  },
   "MeshSprite|2023-07-11T17:05:22.222Z|41740": {
     "ƒ.MeshSprite": {
       "idResource": "MeshSprite|2023-07-11T17:05:22.222Z|41740",
@@ -172,7 +115,7 @@
       "coat": {
         "ƒ.CoatRemissiveTextured": {
           "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-11T16:55:27.151Z|69486",
+          "idTexture": "TextureImage|2023-07-12T08:57:40.501Z|32585",
           "diffuse": 1,
           "specular": 0
         }
@@ -217,7 +160,7 @@
                     "pivot": {
                       "translation": "[0, 0, 50]",
                       "rotation": "[90, 0, 0]",
-                      "scaling": "[100.00000762939453, 400, 1]"
+                      "scaling": "[100.00000762939453, 800, 1]"
                     },
                     "Component": {
                       "active": true
@@ -231,12 +174,12 @@
                     "Component": {
                       "active": true
                     },
-                    "idAnimation": "AnimationSprite|2023-07-11T16:54:47.353Z|07322",
+                    "idAnimation": "AnimationSprite|2023-07-12T08:58:13.064Z|66968",
                     "playmode": "loop",
                     "quantization": "frames",
                     "scale": 1,
                     "scaleWithGameTime": true,
-                    "animateInEditor": false
+                    "animateInEditor": true
                   }
                 }
               ],
@@ -247,7 +190,7 @@
                     "clrPrimary": "[1, 1, 1, 1]",
                     "clrSecondary": "[1, 1, 1, 1]",
                     "pivot": {
-                      "translation": "[0, 0]",
+                      "translation": "[0.25, 0]",
                       "rotation": 0,
                       "scaling": "[0.0833333358168602, 1]"
                     },
@@ -653,7 +596,7 @@
           {
             "ƒ.ComponentTransform": {
               "local": {
-                "translation": "[0, 4, -124]",
+                "translation": "[0, 4, -327]",
                 "rotation": "[0, -90, 0]",
                 "scaling": "[1, 1, 1]"
               },
@@ -1058,6 +1001,37 @@
       "children": [],
       "idResource": "Graph|2023-07-11T11:10:38.584Z|17961",
       "type": "Graph"
+    }
+  },
+  "TextureImage|2023-07-12T08:57:40.501Z|32585": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\Street_Sprite_Besser.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-12T08:57:40.501Z|32585",
+        "name": "Assets\\Street_Sprite_Besser.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "AnimationSprite|2023-07-12T08:58:13.064Z|66968": {
+    "ƒ.AnimationSprite": {
+      "idResource": "AnimationSprite|2023-07-12T08:58:13.064Z|66968",
+      "idTexture": "TextureImage|2023-07-12T08:57:40.501Z|32585",
+      "frames": 25,
+      "wrapAfter": 12,
+      "start": "[0, 0]",
+      "size": "[125, 1000]",
+      "next": "[125, 0]",
+      "wrap": "[0, 0]",
+      "Animation": {
+        "idResource": "AnimationSprite|2023-07-12T08:58:13.064Z|66968",
+        "name": "AnimationSprite_Street",
+        "labels": {},
+        "events": {},
+        "framesPerSecond": 25,
+        "animationStructure": {}
+      }
     }
   }
 }

@@ -133,8 +133,8 @@ var Script;
         Script.viewport.camera = cameraComponent;
         //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
         Script.viewport.camera.mtxPivot.rotateX(10);
-        Script.viewport.camera.mtxPivot.translateZ(-340);
-        Script.viewport.camera.mtxPivot.translateY(30);
+        Script.viewport.camera.mtxPivot.translateZ(-405);
+        Script.viewport.camera.mtxPivot.translateY(-40);
         Script.viewport.camera.mtxPivot.translateX(0);
         cameraNode.addComponent(cameraComponent);
     }
