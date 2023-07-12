@@ -121,7 +121,7 @@ var Script;
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
-        // ƒ.Physics.simulate();  // if physics is included and used
+        ƒ.Physics.simulate(); // if physics is included and used
         Script.playerControl.move();
         Script.viewport.draw();
         //ƒ.AudioManager.default.update();
@@ -132,9 +132,11 @@ var Script;
         //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
         Script.viewport.camera = cameraComponent;
         //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
-        Script.viewport.camera.mtxPivot.rotateX(10);
-        Script.viewport.camera.mtxPivot.translateZ(-405);
-        Script.viewport.camera.mtxPivot.translateY(-40);
+        Script.viewport.camera.mtxPivot.rotateY(0);
+        Script.viewport.camera.mtxPivot.rotateX(20);
+        Script.viewport.camera.mtxPivot.rotateZ(0);
+        Script.viewport.camera.mtxPivot.translateZ(-200);
+        Script.viewport.camera.mtxPivot.translateY(0);
         Script.viewport.camera.mtxPivot.translateX(0);
         cameraNode.addComponent(cameraComponent);
     }
@@ -146,27 +148,51 @@ var Script;
         speed = 0;
         MAX_SPEED;
         acceleration;
-        ctrForward;
-        ctrTurn;
+        player;
+        ctrTurn = new ƒ.Control("Turn", 150, 0 /* ƒ.CONTROL_TYPE.PROPORTIONAL */);
+        body;
+        transform;
+        newCoordinates;
+        positionX = 0;
         gameSettings;
         constructor() {
             super("Player");
             // load external config
             this.loadFile();
-            this.ctrForward = new ƒ.Control("Forward", this.speed * this.acceleration, 0 /* ƒ.CONTROL_TYPE.PROPORTIONAL */);
-            this.ctrForward.setDelay(200);
-            this.ctrTurn = new ƒ.Control("Turn", 150, 0 /* ƒ.CONTROL_TYPE.PROPORTIONAL */);
-            this.ctrTurn.setDelay(300);
-            // potenzielle rigid body Verbesserung
+            this.player = Script.graph.getChildrenByName("PlayerCar")[0];
+            console.log("player: " + this.player);
+            this.body = this.player.getComponent(ƒ.ComponentRigidbody);
+            this.transform = this.player.getComponent(ƒ.ComponentTransform);
         }
         move() {
             let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
-            // RigidBody
-            // body.applyTorque(ƒ.Vector3.SCALE(cart.mtxLocal.getY(), this.ctrTurn.getOutput()));
-            let forward = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
-            this.ctrForward.setInput(forward);
-            // body.applyForce(ƒ.Vector3.SCALE(player.mtxLocal.getZ(), this.ctrForward.getOutput()));
+            // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
+            // this.player.mtxLocal.translate(new ƒ.Vector3(0 ,0 , this.player.mtxLocal.getZ().z));
+            // this.transform.transform(ƒ.Vector3.SCALE(this.player.mtxLocal.getZ(), this.ctrTurn.getOutput()), null,this.player)
+            if (turn == -1 && this.positionX >= -25) {
+                //console.log("rechts")
+                this.newCoordinates = new ƒ.Vector3(-1, 0, 0);
+                this.transform.mtxLocal.translate(this.newCoordinates);
+                this.positionX--;
+                //console.log("Rechts: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
+                //console.log("pos. rechts: " + this.newCoordinates)
+                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
+            }
+            else if (turn == 1 && this.positionX <= 25) {
+                //console.log("links")
+                this.newCoordinates = new ƒ.Vector3(1, 0, 0);
+                this.transform.mtxLocal.translate(this.newCoordinates);
+                this.positionX++;
+                //console.log("Links: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
+                //console.log("pos. links: " + this.newCoordinates)
+                //this.player.mtxLocal.translate(this.newCoordinates);
+            }
+            else {
+                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
+                //this.transform.mtxLocal.translate(ƒ.Vector3.ZERO());
+                // console.log(this.player.mtxWorld.getX().x);
+            }
         }
         async loadFile() {
             let file = await fetch("configuration-game.json");

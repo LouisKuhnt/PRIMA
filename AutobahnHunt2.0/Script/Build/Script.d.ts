@@ -31,8 +31,12 @@ declare namespace Script {
         speed: number;
         MAX_SPEED: number;
         acceleration: number;
-        ctrForward: ƒ.Control;
+        player: ƒ.Node;
         ctrTurn: ƒ.Control;
+        body: ƒ.ComponentRigidbody;
+        transform: ƒ.ComponentTransform;
+        newCoordinates: ƒ.Vector3;
+        positionX: number;
         gameSettings: CustomJson;
         constructor();
         move(): void;

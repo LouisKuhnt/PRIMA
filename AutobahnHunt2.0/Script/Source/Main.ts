@@ -24,8 +24,6 @@ namespace Script {
 
     setCamera();
 
-
-
     playerModel = graph.getChildrenByName("PlayerCar")[0];
     console.log("Player");
     console.log(playerModel);
@@ -48,7 +46,7 @@ namespace Script {
   }
 
   function update(_event: Event): void {
-    // ƒ.Physics.simulate();  // if physics is included and used
+    ƒ.Physics.simulate();  // if physics is included and used
     playerControl.move();
     viewport.draw();
     //ƒ.AudioManager.default.update();
@@ -60,9 +58,11 @@ namespace Script {
     //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
     viewport.camera = cameraComponent;
     //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
-    viewport.camera.mtxPivot.rotateX(10);
-    viewport.camera.mtxPivot.translateZ(-405);
-    viewport.camera.mtxPivot.translateY(-40);
+    viewport.camera.mtxPivot.rotateY(0);
+    viewport.camera.mtxPivot.rotateX(20);
+    viewport.camera.mtxPivot.rotateZ(0);
+    viewport.camera.mtxPivot.translateZ(-200);
+    viewport.camera.mtxPivot.translateY(0);
     viewport.camera.mtxPivot.translateX(0);
     cameraNode.addComponent(cameraComponent);
   }

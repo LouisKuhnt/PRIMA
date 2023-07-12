@@ -5,8 +5,12 @@ namespace Script {
         speed: number = 0;
         MAX_SPEED: number;
         acceleration: number;
-        ctrForward: ƒ.Control;
-        ctrTurn: ƒ.Control;
+        player: ƒ.Node;
+        ctrTurn: ƒ.Control = new ƒ.Control("Turn", 150, ƒ.CONTROL_TYPE.PROPORTIONAL);
+        body: ƒ.ComponentRigidbody;
+        transform: ƒ.ComponentTransform;
+        newCoordinates: ƒ.Vector3;
+        positionX: number = 0;
 
         gameSettings: CustomJson;
 
@@ -14,24 +18,41 @@ namespace Script {
             super("Player");
             // load external config
             this.loadFile();
-
-            this.ctrForward = new ƒ.Control("Forward", this.speed * this.acceleration, ƒ.CONTROL_TYPE.PROPORTIONAL);
-            this.ctrForward.setDelay(200);
-            this.ctrTurn = new ƒ.Control("Turn", 150, ƒ.CONTROL_TYPE.PROPORTIONAL);
-            this.ctrTurn.setDelay(300);
-
-            // potenzielle rigid body Verbesserung
+            this.player = graph.getChildrenByName("PlayerCar")[0];
+            console.log("player: " + this.player);
+            this.body = this.player.getComponent(ƒ.ComponentRigidbody);
+            this.transform = this.player.getComponent(ƒ.ComponentTransform);
         }
 
         public move(){
+            
             let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
-            // RigidBody
-            // body.applyTorque(ƒ.Vector3.SCALE(cart.mtxLocal.getY(), this.ctrTurn.getOutput()));
+            // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
+            // this.player.mtxLocal.translate(new ƒ.Vector3(0 ,0 , this.player.mtxLocal.getZ().z));
+            // this.transform.transform(ƒ.Vector3.SCALE(this.player.mtxLocal.getZ(), this.ctrTurn.getOutput()), null,this.player)
             
-            let forward: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.W, ƒ.KEYBOARD_CODE.ARROW_UP], [ƒ.KEYBOARD_CODE.S, ƒ.KEYBOARD_CODE.ARROW_DOWN]);
-            this.ctrForward.setInput(forward);
-            // body.applyForce(ƒ.Vector3.SCALE(player.mtxLocal.getZ(), this.ctrForward.getOutput()));
+            if(turn == -1 && this.positionX >= -25) {
+                //console.log("rechts")
+                this.newCoordinates = new ƒ.Vector3(-1, 0, 0);
+                this.transform.mtxLocal.translate(this.newCoordinates);
+                this.positionX--;
+                //console.log("Rechts: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
+                //console.log("pos. rechts: " + this.newCoordinates)
+                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
+            } else if(turn == 1 && this.positionX <= 25){
+                //console.log("links")
+                this.newCoordinates = new ƒ.Vector3(1, 0, 0);
+                this.transform.mtxLocal.translate(this.newCoordinates);
+                this.positionX++;
+                //console.log("Links: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
+                //console.log("pos. links: " + this.newCoordinates)
+                //this.player.mtxLocal.translate(this.newCoordinates);
+            } else {
+                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
+                //this.transform.mtxLocal.translate(ƒ.Vector3.ZERO());
+                // console.log(this.player.mtxWorld.getX().x);
+            }
         }
 
         async loadFile(): Promise<void> {
