@@ -250,7 +250,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.0833333358168602, 0]",
+                            "translation": "[0.6666666865348816, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
