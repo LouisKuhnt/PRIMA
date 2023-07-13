@@ -1,10 +1,10 @@
 namespace Script {
-    export let LIVES: number = 3;
 
     export class Player extends ƒ.Node{
-        speed: number = 0;
-        MAX_SPEED: number;
-        acceleration: number;
+        
+        lives: number;
+        acceleration_left: number;
+        acceleration_right: number;
         player: ƒ.Node;
         ctrTurn: ƒ.Control = new ƒ.Control("Turn", 150, ƒ.CONTROL_TYPE.PROPORTIONAL);
         body: ƒ.ComponentRigidbody;
@@ -34,7 +34,7 @@ namespace Script {
             
             if(turn == -1 && this.positionX >= -25) {
                 //console.log("rechts")
-                this.newCoordinates = new ƒ.Vector3(-1, 0, 0);
+                this.newCoordinates = new ƒ.Vector3(this.acceleration_right, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX--;
                 //console.log("Rechts: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
@@ -42,7 +42,7 @@ namespace Script {
                 //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
             } else if(turn == 1 && this.positionX <= 25){
                 //console.log("links")
-                this.newCoordinates = new ƒ.Vector3(1, 0, 0);
+                this.newCoordinates = new ƒ.Vector3(this.acceleration_left, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX++;
                 //console.log("Links: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
@@ -58,8 +58,9 @@ namespace Script {
         async loadFile(): Promise<void> {
             let file: Response = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            this.speed = this.gameSettings["speed"];
-            this.acceleration = this.gameSettings["acceleration"];
+            this.lives = this.gameSettings["lives"];
+            this.acceleration_left = this.gameSettings["acceleration_left"];
+            this.acceleration_right = this.gameSettings["acceleration_right"];
         }
     }
 }

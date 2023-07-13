@@ -16,7 +16,7 @@ canvas.fullscreen {
   height: 100vh; 
 }
 
-#stats {
+#ui {
   position: absolute;
   color: blue;
   z-index: 1000;
@@ -27,7 +27,7 @@ canvas.fullscreen {
   border: white;
 }
 
-ul.no-bullets {
+ul.stats {
   list-style-type: none;
   /* Remove bullets */
   padding: 0;
@@ -43,7 +43,7 @@ input {
   font-size: 20px;
 }
 
-#deathscreen {
+#deadScreen {
   padding-top: 5%;
   display: none;
   margin-left: auto;
@@ -51,7 +51,7 @@ input {
   padding-right: 5%;
 }
 
-#deathscreen p {
+#deadScreen p {
   font-size: 10ex;
   color: white;
   height: 100%;

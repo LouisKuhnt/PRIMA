@@ -4,14 +4,20 @@ namespace Script {
   let cameraNode: ƒ.Node;
   export let graph: ƒ.Node;
   export let viewport: ƒ.Viewport;
-  export let limit_z: number = 300;
-  export let limit_x: number = 100;
   export let ui: VisualInterface;
   export let streetControl: Street;
   export let playerControl: Player;
 
+  let highscore: number = 0;
+  let currentTime: number;
+  let oldTime: number;
   let playerModel: ƒ.Node;
   let streetModel: ƒ.Node;
+  let asphaltModel: ƒ.Node;
+  let motorStarted: boolean = false;
+  //let chrashSound: ƒ.ComponentAudio;
+  let engineStartSound: ƒ.ComponentAudio;
+  let engineRunningSound: ƒ.ComponentAudio;
 
   ƒ.Debug.info("Main Program Template running!");
 
@@ -25,21 +31,22 @@ namespace Script {
     setCamera();
 
     playerModel = graph.getChildrenByName("PlayerCar")[0];
-    console.log("Player");
-    console.log(playerModel);
     playerControl = new Player();
     playerModel.addChild(playerControl);
 
     streetModel = graph.getChildrenByName("Street")[0];
-    console.log("Street");
-    console.log(streetModel);
+    asphaltModel = streetModel.getChildrenByName("Asphalt")[0];
     streetControl = new Street();
-    streetModel.addChild(streetControl)
-    //streetControl.setStreets(streetModel);
+    asphaltModel.addChild(streetControl);
+    streetControl.stopStreet();
 
     ui = new VisualInterface();
-    ui.highscore = 0;
-    ui.lives = 3;
+
+    ƒ.AudioManager.default.listenTo(graph);
+    engineRunningSound = graph.getComponent(ƒ.ComponentAudio);
+    engineRunningSound.play(true);
+    engineRunningSound.loop = true;
+    engineRunningSound.volume = 0;
 
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
@@ -47,9 +54,31 @@ namespace Script {
 
   function update(_event: Event): void {
     ƒ.Physics.simulate();  // if physics is included and used
-    playerControl.move();
+    
+    ui.highscore = highscore;
+    ui.lives = playerControl.lives;
+
+    if(ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted){
+        startGame();
+    }
+
+    if(motorStarted){
+      playerControl.move();
+      //streetControl.startStreet();
+  
+      oldTime = currentTime;
+      currentTime = Math.floor(ƒ.Time.game.get() / 1000);
+      if(oldTime != currentTime) {
+        highscore++;
+      }
+  
+      if(playerControl.lives <= 0) {
+        stopGame();
+      }
+    }
+
     viewport.draw();
-    //ƒ.AudioManager.default.update();
+    ƒ.AudioManager.default.update();
   }
 
   function setCamera(): void {
@@ -65,5 +94,27 @@ namespace Script {
     viewport.camera.mtxPivot.translateY(0);
     viewport.camera.mtxPivot.translateX(0);
     cameraNode.addComponent(cameraComponent);
+  }
+
+  function stopGame() {
+    let deadScreen: HTMLDivElement = <HTMLDivElement> document.querySelector("deadScreen");
+    deadScreen.style.display = "block";
+
+    let p: HTMLParagraphElement = document.createElement("p");
+    p.innerHTML = "You died <br> Score: " + ui.highscore;
+    deadScreen.appendChild(p);
+
+    ƒ.Loop.removeEventListener(ƒ.EVENT.LOOP_FRAME, update);
+    ƒ.Loop.stop();
+  }
+
+  function startGame(){
+    streetControl.startStreet();
+    engineStartSound = playerModel.getComponent(ƒ.ComponentAudio);
+    engineStartSound.volume = 1;
+    engineStartSound.play(true);
+    engineRunningSound.volume = 1;
+
+    motorStarted = true;
   }
 }

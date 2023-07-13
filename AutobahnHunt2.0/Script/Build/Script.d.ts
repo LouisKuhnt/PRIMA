@@ -8,7 +8,14 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    let canvas: HTMLCanvasElement;
+    class Enemy extends ƒ.Node {
+        speed: number;
+        acceleration: number;
+        gameSettings: CustomJson;
+        constructor();
+        move(): void;
+        loadFile(): Promise<void>;
+    }
 }
 declare namespace Script {
     interface CustomJson {
@@ -19,18 +26,15 @@ declare namespace Script {
     import ƒ = FudgeCore;
     let graph: ƒ.Node;
     let viewport: ƒ.Viewport;
-    let limit_z: number;
-    let limit_x: number;
     let ui: VisualInterface;
     let streetControl: Street;
     let playerControl: Player;
 }
 declare namespace Script {
-    let LIVES: number;
     class Player extends ƒ.Node {
-        speed: number;
-        MAX_SPEED: number;
-        acceleration: number;
+        lives: number;
+        acceleration_left: number;
+        acceleration_right: number;
         player: ƒ.Node;
         ctrTurn: ƒ.Control;
         body: ƒ.ComponentRigidbody;
@@ -44,16 +48,26 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    let MAX_TILES: number;
-    let MAX_ENEMIES: number;
-    let STREET_POSITION: number;
-    class Street extends ƒ.Node {
-        multiplikator: number;
-        streets: [ƒ.Node];
-        gameSettings: CustomJson;
+    import ƒ = FudgeCore;
+    class RandomEnemySpawn extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        private possiblePositions;
         constructor();
-        setStreets(): void;
-        deleteLastStreet(): void;
+        generateRandomSpawn(): void;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class Street extends ƒ.Node {
+        acceleration: number;
+        gameSettings: CustomJson;
+        street: ƒ.Node;
+        asphalt: ƒ.Node;
+        asphaltSprite: ƒ.ComponentAnimator;
+        constructor();
+        stopStreet(): void;
+        startStreet(): void;
         loadFile(): Promise<void>;
     }
 }

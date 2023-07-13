@@ -1,48 +1,36 @@
 namespace Script {
-
-    export let MAX_TILES: number = 5;
-    export let MAX_ENEMIES: number = 4;
-    export let STREET_POSITION: number = 150;
+    import ƒ = FudgeCore;
 
     // Street Node
     export class Street extends ƒ.Node{
         
-        multiplikator: number;
-        streets: [ƒ.Node];
-        
+        acceleration: number;
         gameSettings: CustomJson;
+        street: ƒ.Node;
+        asphalt: ƒ.Node;
+        asphaltSprite: ƒ.ComponentAnimator;
         
         constructor() {
             super("Street");
             // load external file
             this.loadFile();
+            this.street = graph.getChildrenByName("Street")[0];
+            this.asphalt = this.street.getChildrenByName("Asphalt")[0];
+            this.asphaltSprite = this.asphalt.getComponent(ƒ.ComponentAnimator);
         }
 
-        public setStreets() {
-            /*if(streetModel != null) {
-                this.streets.push(streetModel);
-            }
-
-            console.log("Übertragenes StreetModel: " + streetModel);
-            for(let i = this.streets.length; i <= MAX_TILES; i++) {
-                if (streetModel != null) {
-                    console.log(streetModel.mtxWorld);
-                    // graph.addChild(streetModel);
-                }
-                else {
-
-                }
-            }*/
+        public stopStreet() {
+            this.asphaltSprite.playmode = ƒ.ANIMATION_PLAYMODE.STOP;
         }
 
-        public deleteLastStreet(){
-            //array pop für das letzte objekt
+        public startStreet() {
+            this.asphaltSprite.playmode = ƒ.ANIMATION_PLAYMODE.LOOP;
         }
 
         async loadFile(): Promise<void> {
             let file: Response = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            this.multiplikator = this.gameSettings["score_multiplicator"]
+            this.acceleration = this.gameSettings["acceleration"]
         }
     }
 }

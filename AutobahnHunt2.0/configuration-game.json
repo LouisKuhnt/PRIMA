@@ -1,5 +1,6 @@
 {
-    "speed": 0.1,
-    "score_multiplicator": 1,
-    "acceleration": 0.1
+    "enemy_speed": 0.1,
+    "acceleration_left": 1,
+    "acceleration_right": -1,
+    "lives": 3
 }
