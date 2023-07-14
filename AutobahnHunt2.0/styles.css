@@ -4,7 +4,7 @@ html, body {
   width: 100%;
   height: 100%;
   font-size: 20px;
- overflow: hidden;
+  overflow: hidden;
 }
 
 dialog { 
@@ -54,6 +54,14 @@ input {
 #deadScreen p {
   font-size: 10ex;
   color: white;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+#startGame {
+  font-size: 10ex;
+  color: aqua;
   height: 100%;
   width: 100%;
   text-align: center;

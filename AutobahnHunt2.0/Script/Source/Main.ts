@@ -97,7 +97,7 @@ namespace Script {
   }
 
   function stopGame() {
-    let deadScreen: HTMLDivElement = <HTMLDivElement> document.querySelector("deadScreen");
+    let deadScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#deadScreen");
     deadScreen.style.display = "block";
 
     let p: HTMLParagraphElement = document.createElement("p");
@@ -114,6 +114,9 @@ namespace Script {
     engineStartSound.volume = 1;
     engineStartSound.play(true);
     engineRunningSound.volume = 1;
+
+    let startScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#startGame");
+    startScreen.remove();
 
     motorStarted = true;
   }

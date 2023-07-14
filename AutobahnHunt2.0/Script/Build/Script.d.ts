@@ -18,6 +18,11 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    class EnemyManager {
+        constructor();
+    }
+}
+declare namespace Script {
     interface CustomJson {
         [name: string]: number;
     }
@@ -79,4 +84,7 @@ declare namespace Script {
         constructor();
         protected reduceMutator(_mutator: ƒ.Mutator): void;
     }
+}
+declare namespace Script {
+    let canvas: HTMLCanvasElement;
 }

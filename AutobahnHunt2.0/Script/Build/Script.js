@@ -59,6 +59,14 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
+    class EnemyManager {
+        constructor() {
+        }
+    }
+    Script.EnemyManager = EnemyManager;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
     var ƒ = FudgeCore;
     let cameraNode;
     let highscore = 0;
@@ -131,7 +139,7 @@ var Script;
         cameraNode.addComponent(cameraComponent);
     }
     function stopGame() {
-        let deadScreen = document.querySelector("deadScreen");
+        let deadScreen = document.querySelector("#deadScreen");
         deadScreen.style.display = "block";
         let p = document.createElement("p");
         p.innerHTML = "You died <br> Score: " + Script.ui.highscore;
@@ -145,6 +153,8 @@ var Script;
         engineStartSound.volume = 1;
         engineStartSound.play(true);
         engineRunningSound.volume = 1;
+        let startScreen = document.querySelector("#startGame");
+        startScreen.remove();
         motorStarted = true;
     }
 })(Script || (Script = {}));
@@ -283,5 +293,42 @@ var Script;
         }
     }
     Script.VisualInterface = VisualInterface;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    window.addEventListener("load", init);
+    let dialog;
+    function init(_event) {
+        dialog = document.querySelector("dialog");
+        dialog.querySelector("h1").textContent = document.title;
+        dialog.addEventListener("click", function (_event) {
+            // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
+            dialog.close();
+            startInteractiveViewport();
+        });
+        //@ts-ignore
+        dialog.showModal();
+    }
+    // setup and start interactive viewport
+    async function startInteractiveViewport() {
+        // load resources referenced in the link-tag
+        await ƒ.Project.loadResourcesFromHTML();
+        ƒ.Debug.log("Project:", ƒ.Project.resources);
+        // pick the graph to show
+        let graph = ƒ.Project.resources["Graph|2023-07-11T10:45:19.148Z|55359"];
+        ƒ.Debug.log("Graph:", graph);
+        if (!graph) {
+            alert("Nothing to render. Create a graph with at least a mesh, material and probably some light");
+            return;
+        }
+        // setup the viewport
+        let cmpCamera = new ƒ.ComponentCamera();
+        Script.canvas = document.querySelector("canvas");
+        let viewport = new ƒ.Viewport();
+        viewport.initialize("InteractiveViewport", graph, cmpCamera, Script.canvas);
+        ƒ.Debug.log("Viewport:", viewport);
+        viewport.draw();
+        Script.canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));
+    }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map
