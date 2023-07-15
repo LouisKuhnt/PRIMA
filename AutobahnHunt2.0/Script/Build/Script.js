@@ -38,15 +38,18 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
-    class Enemy extends ƒ.Node {
+    class Enemy extends Script.Entity {
         speed = 0;
         acceleration;
         gameSettings;
-        constructor() {
-            super("Enemy");
+        enemy;
+        constructor(name) {
+            super(name, 1);
             this.loadFile();
         }
         move() {
+            if (Script.lives <= 0) {
+            }
         }
         async loadFile() {
             let file = await fetch("configuration-game.json");
@@ -64,6 +67,59 @@ var Script;
         }
     }
     Script.EnemyManager = EnemyManager;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    class Entity extends ƒ.Node {
+        lives;
+        constructor(name, lives) {
+            super(name);
+            this.lives = lives;
+            console.log("constructor: " + this.lives);
+        }
+        collision() {
+            console.log("hit " + Script.lives);
+            Script.lives--;
+        }
+    }
+    Script.Entity = Entity;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    window.addEventListener("load", init);
+    let dialog;
+    function init(_event) {
+        dialog = document.querySelector("dialog");
+        dialog.querySelector("h1").textContent = document.title;
+        dialog.addEventListener("click", function (_event) {
+            // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
+            dialog.close();
+            startInteractiveViewport();
+        });
+        //@ts-ignore
+        dialog.showModal();
+    }
+    // setup and start interactive viewport
+    async function startInteractiveViewport() {
+        // load resources referenced in the link-tag
+        await ƒ.Project.loadResourcesFromHTML();
+        ƒ.Debug.log("Project:", ƒ.Project.resources);
+        // pick the graph to show
+        let graph = ƒ.Project.resources["Graph|2023-07-11T10:45:19.148Z|55359"];
+        ƒ.Debug.log("Graph:", graph);
+        if (!graph) {
+            alert("Nothing to render. Create a graph with at least a mesh, material and probably some light");
+            return;
+        }
+        // setup the viewport
+        let cmpCamera = new ƒ.ComponentCamera();
+        Script.canvas = document.querySelector("canvas");
+        let viewport = new ƒ.Viewport();
+        viewport.initialize("InteractiveViewport", graph, cmpCamera, Script.canvas);
+        ƒ.Debug.log("Viewport:", viewport);
+        viewport.draw();
+        Script.canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));
+    }
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -105,7 +161,7 @@ var Script;
     function update(_event) {
         ƒ.Physics.simulate(); // if physics is included and used
         Script.ui.highscore = highscore;
-        Script.ui.lives = Script.playerControl.lives;
+        Script.ui.lives = Script.lives;
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted) {
             startGame();
         }
@@ -117,7 +173,7 @@ var Script;
             if (oldTime != currentTime) {
                 highscore++;
             }
-            if (Script.playerControl.lives <= 0) {
+            if (Script.lives <= 0) {
                 stopGame();
             }
         }
@@ -150,9 +206,9 @@ var Script;
     function startGame() {
         Script.streetControl.startStreet();
         engineStartSound = playerModel.getComponent(ƒ.ComponentAudio);
-        engineStartSound.volume = 1;
+        engineStartSound.volume = 0.1;
         engineStartSound.play(true);
-        engineRunningSound.volume = 1;
+        engineRunningSound.volume = 0.1;
         let startScreen = document.querySelector("#startGame");
         startScreen.remove();
         motorStarted = true;
@@ -160,8 +216,7 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
-    class Player extends ƒ.Node {
-        lives;
+    class Player extends Script.Entity {
         acceleration_left;
         acceleration_right;
         player;
@@ -172,13 +227,14 @@ var Script;
         positionX = 0;
         gameSettings;
         constructor() {
-            super("Player");
+            super("Player", 3);
             // load external config
             this.loadFile();
             this.player = Script.graph.getChildrenByName("PlayerCar")[0];
             console.log("player: " + this.player);
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
+            this.body.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.collision);
         }
         move() {
             let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
@@ -213,7 +269,7 @@ var Script;
         async loadFile() {
             let file = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            this.lives = this.gameSettings["lives"];
+            Script.lives = this.gameSettings["lives"];
             this.acceleration_left = this.gameSettings["acceleration_left"];
             this.acceleration_right = this.gameSettings["acceleration_right"];
         }
@@ -293,42 +349,5 @@ var Script;
         }
     }
     Script.VisualInterface = VisualInterface;
-})(Script || (Script = {}));
-var Script;
-(function (Script) {
-    window.addEventListener("load", init);
-    let dialog;
-    function init(_event) {
-        dialog = document.querySelector("dialog");
-        dialog.querySelector("h1").textContent = document.title;
-        dialog.addEventListener("click", function (_event) {
-            // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
-            dialog.close();
-            startInteractiveViewport();
-        });
-        //@ts-ignore
-        dialog.showModal();
-    }
-    // setup and start interactive viewport
-    async function startInteractiveViewport() {
-        // load resources referenced in the link-tag
-        await ƒ.Project.loadResourcesFromHTML();
-        ƒ.Debug.log("Project:", ƒ.Project.resources);
-        // pick the graph to show
-        let graph = ƒ.Project.resources["Graph|2023-07-11T10:45:19.148Z|55359"];
-        ƒ.Debug.log("Graph:", graph);
-        if (!graph) {
-            alert("Nothing to render. Create a graph with at least a mesh, material and probably some light");
-            return;
-        }
-        // setup the viewport
-        let cmpCamera = new ƒ.ComponentCamera();
-        Script.canvas = document.querySelector("canvas");
-        let viewport = new ƒ.Viewport();
-        viewport.initialize("InteractiveViewport", graph, cmpCamera, Script.canvas);
-        ƒ.Debug.log("Viewport:", viewport);
-        viewport.draw();
-        Script.canvas.dispatchEvent(new CustomEvent("interactiveViewportStarted", { bubbles: true, detail: viewport }));
-    }
 })(Script || (Script = {}));
 //# sourceMappingURL=Script.js.map

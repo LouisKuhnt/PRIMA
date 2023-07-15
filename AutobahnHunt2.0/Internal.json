@@ -232,6 +232,30 @@
       }
     }
   },
+  "Audio|2023-07-13T14:49:07.028Z|85317": {
+    "ƒ.Audio": {
+      "url": "Assets\\driving-in-a-car.mp3",
+      "idResource": "Audio|2023-07-13T14:49:07.028Z|85317",
+      "name": "Assets\\driving-in-a-car.mp3",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-07-13T14:49:48.481Z|23945": {
+    "ƒ.Audio": {
+      "url": "Assets\\crash.mp3",
+      "idResource": "Audio|2023-07-13T14:49:48.481Z|23945",
+      "name": "Assets\\crash.mp3",
+      "type": "Audio"
+    }
+  },
+  "Audio|2023-07-13T14:49:07.027Z|54915": {
+    "ƒ.Audio": {
+      "url": "Assets\\carengine.mp3",
+      "idResource": "Audio|2023-07-13T14:49:07.027Z|54915",
+      "name": "Assets\\carengine.mp3",
+      "type": "Audio"
+    }
+  },
   "Graph|2023-07-11T10:45:19.148Z|55359": {
     "ƒ.Graph": {
       "name": "Game",
@@ -256,7 +280,6 @@
             }
           }
         ],
-        "ComponentAudioListener": [],
         "ComponentAudio": [
           {
             "ƒ.ComponentAudio": {
@@ -315,7 +338,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.0833333358168602, 0]",
+                            "translation": "[0.25, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
@@ -1808,30 +1831,6 @@
           "specular": 0
         }
       }
-    }
-  },
-  "Audio|2023-07-13T14:49:07.027Z|54915": {
-    "ƒ.Audio": {
-      "url": "Assets\\carengine.mp3",
-      "idResource": "Audio|2023-07-13T14:49:07.027Z|54915",
-      "name": "Assets\\carengine.mp3",
-      "type": "Audio"
-    }
-  },
-  "Audio|2023-07-13T14:49:07.028Z|85317": {
-    "ƒ.Audio": {
-      "url": "Assets\\driving-in-a-car.mp3",
-      "idResource": "Audio|2023-07-13T14:49:07.028Z|85317",
-      "name": "Assets\\driving-in-a-car.mp3",
-      "type": "Audio"
-    }
-  },
-  "Audio|2023-07-13T14:49:48.481Z|23945": {
-    "ƒ.Audio": {
-      "url": "Assets\\crash.mp3",
-      "idResource": "Audio|2023-07-13T14:49:48.481Z|23945",
-      "name": "Assets\\crash.mp3",
-      "type": "Audio"
     }
   }
 }

@@ -1,18 +1,23 @@
 namespace Script {
 
-    export class Enemy extends ƒ.Node{
+    export let enemyLive: number;
+
+    export class Enemy extends Entity{
 
         speed: number = 0;
         acceleration: number;
         gameSettings: CustomJson;
+        enemy: ƒ.Node;
 
-        constructor(){
-            super("Enemy");
+        constructor(name: string){
+            super(name, 1);
             this.loadFile();
         }
 
         public move() {
-            
+            if (lives <= 0) {
+                
+            }
         }
 
         async loadFile(): Promise<void> {

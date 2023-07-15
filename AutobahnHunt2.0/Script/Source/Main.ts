@@ -56,7 +56,7 @@ namespace Script {
     ƒ.Physics.simulate();  // if physics is included and used
     
     ui.highscore = highscore;
-    ui.lives = playerControl.lives;
+    ui.lives = lives;
 
     if(ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted){
         startGame();
@@ -64,6 +64,7 @@ namespace Script {
 
     if(motorStarted){
       playerControl.move();
+      
       //streetControl.startStreet();
   
       oldTime = currentTime;
@@ -72,7 +73,7 @@ namespace Script {
         highscore++;
       }
   
-      if(playerControl.lives <= 0) {
+      if(lives <= 0) {
         stopGame();
       }
     }
@@ -111,9 +112,9 @@ namespace Script {
   function startGame(){
     streetControl.startStreet();
     engineStartSound = playerModel.getComponent(ƒ.ComponentAudio);
-    engineStartSound.volume = 1;
+    engineStartSound.volume = 0.1;
     engineStartSound.play(true);
-    engineRunningSound.volume = 1;
+    engineRunningSound.volume = 0.1;
 
     let startScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#startGame");
     startScreen.remove();

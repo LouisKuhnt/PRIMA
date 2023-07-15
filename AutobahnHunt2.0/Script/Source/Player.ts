@@ -1,8 +1,8 @@
-namespace Script {
+namespace Script{
+    export let lives: number;
 
-    export class Player extends ƒ.Node{
+    export class Player extends Entity{
         
-        lives: number;
         acceleration_left: number;
         acceleration_right: number;
         player: ƒ.Node;
@@ -15,13 +15,14 @@ namespace Script {
         gameSettings: CustomJson;
 
         constructor() {
-            super("Player");
+            super("Player", 3);
             // load external config
             this.loadFile();
             this.player = graph.getChildrenByName("PlayerCar")[0];
             console.log("player: " + this.player);
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
+            this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
         }
 
         public move(){
@@ -58,7 +59,7 @@ namespace Script {
         async loadFile(): Promise<void> {
             let file: Response = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            this.lives = this.gameSettings["lives"];
+            lives = this.gameSettings["lives"];
             this.acceleration_left = this.gameSettings["acceleration_left"];
             this.acceleration_right = this.gameSettings["acceleration_right"];
         }

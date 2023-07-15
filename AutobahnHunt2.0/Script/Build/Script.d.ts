@@ -8,11 +8,13 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    class Enemy extends ƒ.Node {
+    let enemyLive: number;
+    class Enemy extends Entity {
         speed: number;
         acceleration: number;
         gameSettings: CustomJson;
-        constructor();
+        enemy: ƒ.Node;
+        constructor(name: string);
         move(): void;
         loadFile(): Promise<void>;
     }
@@ -21,6 +23,16 @@ declare namespace Script {
     class EnemyManager {
         constructor();
     }
+}
+declare namespace Script {
+    class Entity extends ƒ.Node {
+        lives: number;
+        constructor(name: string, lives: number);
+        protected collision(): void;
+    }
+}
+declare namespace Script {
+    let canvas: HTMLCanvasElement;
 }
 declare namespace Script {
     interface CustomJson {
@@ -36,8 +48,8 @@ declare namespace Script {
     let playerControl: Player;
 }
 declare namespace Script {
-    class Player extends ƒ.Node {
-        lives: number;
+    let lives: number;
+    class Player extends Entity {
         acceleration_left: number;
         acceleration_right: number;
         player: ƒ.Node;
@@ -84,7 +96,4 @@ declare namespace Script {
         constructor();
         protected reduceMutator(_mutator: ƒ.Mutator): void;
     }
-}
-declare namespace Script {
-    let canvas: HTMLCanvasElement;
 }
