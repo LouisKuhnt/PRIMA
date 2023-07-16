@@ -11,6 +11,8 @@ namespace Script {
   let highscore: number = 0;
   let currentTime: number;
   let oldTime: number;
+  let isSpawned: boolean = false;
+  let enemyList: Enemy[] = [];
   let playerModel: ƒ.Node;
   let streetModel: ƒ.Node;
   let asphaltModel: ƒ.Node;
@@ -64,8 +66,16 @@ namespace Script {
 
     if(motorStarted){
       playerControl.move();
-      
-      //streetControl.startStreet();
+    
+      enemyList.forEach(enemy => {
+        enemy.move();
+      });
+
+      spawnEnemy(highscore);
+
+      if(highscore%10 == 1 || highscore%10 == 6) {
+        isSpawned = false;
+      }
   
       oldTime = currentTime;
       currentTime = Math.floor(ƒ.Time.game.get() / 1000);
@@ -120,5 +130,13 @@ namespace Script {
     startScreen.remove();
 
     motorStarted = true;
+  }
+
+  function spawnEnemy(spawnTime: number) {
+    if((spawnTime%10 == 0 || spawnTime%10 == 5) && !isSpawned) {
+      isSpawned = true;
+      enemyList.push(new Enemy("Enemy"));
+      console.log(enemyList);
+    }
   }
 }

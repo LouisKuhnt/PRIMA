@@ -1,7 +1,7 @@
 namespace Script{
     export let lives: number;
 
-    export class Player extends Entity{
+    export class Player extends AllEntity{
         
         acceleration_left: number;
         acceleration_right: number;

@@ -1,6 +1,25 @@
 "use strict";
 var Script;
 (function (Script) {
+    // formerly known as Entity, but typescript got a problem with the build process, 
+    // that if enemy.ts is above entity the Enemy will be build before Entity - so 
+    // the class would be used before its declaration.
+    class AllEntity extends ƒ.Node {
+        lives;
+        constructor(name, lives) {
+            super(name);
+            this.lives = lives;
+            console.log("constructor: " + this.lives);
+        }
+        collision() {
+            console.log("hit " + Script.lives);
+            Script.lives--;
+        }
+    }
+    Script.AllEntity = AllEntity;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
     var ƒ = FudgeCore;
     ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
     class CustomComponentScript extends ƒ.ComponentScript {
@@ -38,18 +57,34 @@ var Script;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
-    class Enemy extends Script.Entity {
+    class Enemy extends Script.AllEntity {
         speed = 0;
         acceleration;
         gameSettings;
         enemy;
+        enemyBody;
+        startPostionScript = new Script.RandomEnemySpawn();
         constructor(name) {
             super(name, 1);
             this.loadFile();
+            this.startEnemy();
         }
         move() {
-            if (Script.lives <= 0) {
+            if (Script.lives >= 0) {
+                this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - 400));
+                console.log("is moving");
             }
+        }
+        startEnemy() {
+            let enemyInstance;
+            enemyInstance = ƒ.Project.createGraphInstance(ƒ.Project.getResourcesByName("EnemyCar")[0]);
+            console.log("enemy spawn : " + enemyInstance);
+            enemyInstance.then(element => {
+                element.addComponent(this.startPostionScript);
+                this.enemy = element;
+                this.enemyBody = element.getComponent(ƒ.ComponentRigidbody);
+                Script.graph.addChild(element);
+            });
         }
         async loadFile() {
             let file = await fetch("configuration-game.json");
@@ -60,30 +95,45 @@ var Script;
     }
     Script.Enemy = Enemy;
 })(Script || (Script = {}));
-var Script;
-(function (Script) {
-    class EnemyManager {
-        constructor() {
+/*namespace Script{
+
+    export class EnemyManager {
+
+        max_enemies: number = 1;
+        enemyList: Enemy[] = [];
+        enemyTemplate: ƒ.Node;
+        currentEnemies: number = 0;
+        startPostionScript: ƒ.Component = new RandomEnemySpawn();
+        
+        constructor(){
+            this.enemyTemplate = graph.getChildrenByName("EnemyCar")[0];
+        }
+
+        /*public startEnemy() {
+            let enemyInstance: Promise<ƒ.GraphInstance>;
+            enemyInstance = ƒ.Project.createGraphInstance(
+            <ƒ.Graph>ƒ.Project.getResourcesByName("EnemyCar")[0]);
+
+            console.log("enemy spawn : " + enemyInstance);
+
+            enemyInstance.then( element => {
+                console.log("enemyManager: " + element);
+                let enemyControl = new Enemy(this.currentEnemies.toString(), element);
+                element.addChild(enemyControl);
+                element.addComponent(this.startPostionScript);
+
+                graph.addChild(element);
+                this.enemyList.push(enemyControl);
+            });
+        }
+
+        public moveEnemy() {
+            this.enemyList.forEach(element => {
+                element.move();
+            });
         }
     }
-    Script.EnemyManager = EnemyManager;
-})(Script || (Script = {}));
-var Script;
-(function (Script) {
-    class Entity extends ƒ.Node {
-        lives;
-        constructor(name, lives) {
-            super(name);
-            this.lives = lives;
-            console.log("constructor: " + this.lives);
-        }
-        collision() {
-            console.log("hit " + Script.lives);
-            Script.lives--;
-        }
-    }
-    Script.Entity = Entity;
-})(Script || (Script = {}));
+}*/ 
 var Script;
 (function (Script) {
     window.addEventListener("load", init);
@@ -128,6 +178,8 @@ var Script;
     let highscore = 0;
     let currentTime;
     let oldTime;
+    let isSpawned = false;
+    let enemyList = [];
     let playerModel;
     let streetModel;
     let asphaltModel;
@@ -167,7 +219,13 @@ var Script;
         }
         if (motorStarted) {
             Script.playerControl.move();
-            //streetControl.startStreet();
+            enemyList.forEach(enemy => {
+                enemy.move();
+            });
+            spawnEnemy(highscore);
+            if (highscore % 10 == 1 || highscore % 10 == 6) {
+                isSpawned = false;
+            }
             oldTime = currentTime;
             currentTime = Math.floor(ƒ.Time.game.get() / 1000);
             if (oldTime != currentTime) {
@@ -213,10 +271,17 @@ var Script;
         startScreen.remove();
         motorStarted = true;
     }
+    function spawnEnemy(spawnTime) {
+        if ((spawnTime % 10 == 0 || spawnTime % 10 == 5) && !isSpawned) {
+            isSpawned = true;
+            enemyList.push(new Script.Enemy("Enemy"));
+            console.log(enemyList);
+        }
+    }
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
-    class Player extends Script.Entity {
+    class Player extends Script.AllEntity {
         acceleration_left;
         acceleration_right;
         player;
@@ -286,16 +351,19 @@ var Script;
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "CustomComponentScript added to ";
         possiblePositions = [
-            new ƒ.Vector3(30, 0, 700),
-            new ƒ.Vector3(-30, 0, 700),
-            new ƒ.Vector3(0, 0, 700)
+            new ƒ.Vector3(26, 1, 500),
+            new ƒ.Vector3(-26, 1, 500),
+            new ƒ.Vector3(0, 1, 500)
         ];
         constructor() {
             super();
             this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.generateRandomSpawn);
         }
+        //this.possiblePositions[ƒ.Random.default.getRange(0,2)]
         generateRandomSpawn() {
-            this.node.mtxLocal.translate(this.possiblePositions[ƒ.Random.default.getRange(0, 2)]);
+            let rndNumber = Math.floor(Math.random() * 3);
+            console.log("ComponentScript : " + this.node.mtxLocal.get());
+            this.node.mtxLocal.translate(this.possiblePositions[rndNumber]);
         }
     }
     Script.RandomEnemySpawn = RandomEnemySpawn;

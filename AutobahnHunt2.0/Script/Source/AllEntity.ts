@@ -1,6 +1,9 @@
 namespace Script {
 
-    export class Entity extends ƒ.Node {
+    // formerly known as Entity, but typescript got a problem with the build process, 
+    // that if enemy.ts is above entity the Enemy will be build before Entity - so 
+    // the class would be used before its declaration.
+    export class AllEntity extends ƒ.Node {
 
         lives: number;
 

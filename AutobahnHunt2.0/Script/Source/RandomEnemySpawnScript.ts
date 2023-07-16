@@ -9,18 +9,20 @@ namespace Script {
         public message: string = "CustomComponentScript added to ";
 
         private possiblePositions: ƒ.Vector3[] = [
-            new ƒ.Vector3(30, 0, 700),
-            new ƒ.Vector3(-30, 0, 700),
-            new ƒ.Vector3(0, 0, 700)
+            new ƒ.Vector3(26, 1, 500),
+            new ƒ.Vector3(-26, 1, 500),
+            new ƒ.Vector3(0, 1, 500)
         ];
 
         constructor() {
             super();
             this.addEventListener(ƒ.EVENT.COMPONENT_ADD, this.generateRandomSpawn);
         }
-
+//this.possiblePositions[ƒ.Random.default.getRange(0,2)]
         public generateRandomSpawn(): void {
-            this.node.mtxLocal.translate(this.possiblePositions[ƒ.Random.default.getRange(0,2)]);
+            let rndNumber = Math.floor(Math.random() * 3);
+            console.log("ComponentScript : " + this.node.mtxLocal.get());
+            this.node.mtxLocal.translate(this.possiblePositions[rndNumber]);
         }
     }
 }
