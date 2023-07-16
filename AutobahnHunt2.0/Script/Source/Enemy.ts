@@ -20,7 +20,6 @@ namespace Script {
         public move() {
             if (lives >= 0) {
                 this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - 400));
-                console.log("is moving");
             }
         }
 
@@ -45,5 +44,10 @@ namespace Script {
             this.speed = this.gameSettings["speed"];
             this.acceleration = this.gameSettings["acceleration"];
         }
+
+        // Wand am ende der Fahrbahn erstellen, um die enemys mit collision zu deaktivieren
+        // Crash Sound hinzufügen
+        // CustomEvents siehe https://github.com/jankefyn/Prima/blob/main/Archero/Script/Source/Main.ts
+        // -> Idee wäre vielleicht leben so zurückgeben
     }
 }

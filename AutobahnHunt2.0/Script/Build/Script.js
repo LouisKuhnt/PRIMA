@@ -72,7 +72,6 @@ var Script;
         move() {
             if (Script.lives >= 0) {
                 this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - 400));
-                console.log("is moving");
             }
         }
         startEnemy() {
