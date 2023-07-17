@@ -214,21 +214,10 @@
       "coat": {
         "ƒ.CoatRemissiveTextured": {
           "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-12T16:10:01.879Z|43698",
+          "idTexture": "TextureImage|2023-07-17T17:31:42.959Z|72227",
           "diffuse": 1,
           "specular": 0
         }
-      }
-    }
-  },
-  "TextureImage|2023-07-12T16:10:01.879Z|43698": {
-    "ƒ.TextureImage": {
-      "url": "Assets\\EnemyCar_Color.png",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-12T16:10:01.879Z|43698",
-        "name": "Assets\\EnemyCar_Color.png",
-        "mipmap": "CRISP"
       }
     }
   },
@@ -338,7 +327,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.5833333134651184, 0]",
+                            "translation": "[0.4166666567325592, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
@@ -2262,6 +2251,61 @@
       ],
       "idResource": "Graph|2023-07-16T12:21:52.253Z|23011",
       "type": "Graph"
+    }
+  },
+  "TextureImage|2023-07-17T17:31:42.959Z|72227": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\EnemyCar_Color_0.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-17T17:31:42.959Z|72227",
+        "name": "Assets\\EnemyCar_Color_0.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2023-07-17T17:31:42.960Z|52611": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\EnemyCar_Color_1.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-17T17:31:42.960Z|52611",
+        "name": "Assets\\EnemyCar_Color_1.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2023-07-17T17:31:42.960Z|80925": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\EnemyCar_Color_2.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-17T17:31:42.960Z|80925",
+        "name": "Assets\\EnemyCar_Color_2.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2023-07-17T17:31:42.960Z|10381": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\EnemyCar_Color_3.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-17T17:31:42.960Z|10381",
+        "name": "Assets\\EnemyCar_Color_3.png",
+        "mipmap": "CRISP"
+      }
+    }
+  },
+  "TextureImage|2023-07-17T17:31:42.961Z|12769": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\EnemyCar_Color_4.png",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-17T17:31:42.961Z|12769",
+        "name": "Assets\\EnemyCar_Color_4.png",
+        "mipmap": "CRISP"
+      }
     }
   }
 }
