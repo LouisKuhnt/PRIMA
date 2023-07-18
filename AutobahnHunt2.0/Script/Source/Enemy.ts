@@ -4,25 +4,21 @@ namespace Script {
 
         speed: number = 0;
         gameSettings: CustomJson;
-        enemy: ƒ.GraphInstance;
-        enemyBody: ƒ.ComponentRigidbody;
         enemy_lives: number = 1;
+        enemyList: ƒ.GraphInstance[] = [];
         startPostionScript: ƒ.Component = new RandomEnemySpawn();
+        collisionDetect: ƒ.Component = new EnemyCollisionDetect();
+        randomColor: string[] = ["EnemyCar_Color_0.png", "EnemyCar_Color_1.png", "EnemyCar_Color_2.png", "EnemyCar_Color_3.png", "EnemyCar_Color_4.png"];
 
         constructor(name: string){
             super(name, 1);
             this.loadFile();
-            this.startEnemy();
         }
 
         public move() {
-            if(this.enemy_lives != this.getLives()) {
-                this.decreaseLives()
-            }
-
-            if (this.getLives() >= 0) {
-                this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - this.speed));
-            }
+            this.enemyList.forEach(enemy => {
+                enemy.getComponent(ƒ.ComponentRigidbody).applyForce(new ƒ.Vector3(0, 0, enemy.mtxLocal.getZ().z - this.speed)); 
+            });
         }
 
         public startEnemy() {
@@ -32,11 +28,20 @@ namespace Script {
 
             enemyInstance.then( element => {
                 element.addComponent(this.startPostionScript);
-                this.enemy = element;
-                this.enemyBody = element.getComponent(ƒ.ComponentRigidbody);
+                element.addComponent(this.collisionDetect);
+                let chassisChild = element.getChildrenByName("LowerChassis")[0];
+                let chassisMaterial = chassisChild.getComponent(ƒ.ComponentMaterial);
+                chassisChild.removeComponent(chassisMaterial);
 
+                let mtrEnemy: ƒ.Material = 
+                new ƒ.Material("something", ƒ.ShaderFlatTextured, 
+                new ƒ.CoatRemissiveTextured(new ƒ.Color(255,255,255,255), 
+                new ƒ.TextureImage(this.getRandomColor())));
+
+                chassisChild.addComponent(new ƒ.ComponentMaterial(mtrEnemy));
+                
+                this.enemyList.push(element);
                 graph.addChild(element);
-                this.enemyBody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_EXIT, this.collision);
             });  
         }
 
@@ -46,9 +51,9 @@ namespace Script {
             this.speed = this.gameSettings["enemy_speed"];
         }
 
-        private collision(_event: ƒ.EventPhysics) {
-            console.log("collision_enemy: " + _event.cmpRigidbody.node.name);
-            //console.log("myself: " + _event.);
+        private getRandomColor(): string {
+            let enemyColor = this.randomColor[Math.floor(Math.random() * 5)];
+            return ".\\Assets\\" + enemyColor;
         }
 
         // Wand am ende der Fahrbahn erstellen, um die enemys mit collision zu deaktivieren

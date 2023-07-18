@@ -20,15 +20,27 @@ declare namespace Script {
     class Enemy extends AllEntity {
         speed: number;
         gameSettings: CustomJson;
-        enemy: ƒ.GraphInstance;
-        enemyBody: ƒ.ComponentRigidbody;
         enemy_lives: number;
+        enemyList: ƒ.GraphInstance[];
         startPostionScript: ƒ.Component;
+        collisionDetect: ƒ.Component;
+        randomColor: string[];
         constructor(name: string);
         move(): void;
         startEnemy(): void;
         loadFile(): Promise<void>;
-        private collision;
+        private getRandomColor;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class EnemyCollisionDetect extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        enemyBody: ƒ.ComponentRigidbody;
+        constructor();
+        componentAdded(): any;
+        collision(): any;
     }
 }
 declare namespace Script {
@@ -48,7 +60,6 @@ declare namespace Script {
     let playerControl: Player;
 }
 declare namespace Script {
-    let player_lives: number;
     class Player extends AllEntity {
         acceleration_left: number;
         acceleration_right: number;
@@ -61,8 +72,18 @@ declare namespace Script {
         gameSettings: CustomJson;
         constructor();
         move(): void;
-        private collision;
         loadFile(): Promise<void>;
+    }
+}
+declare namespace Script {
+    import ƒ = FudgeCore;
+    class PlayerCollisionDetect extends ƒ.ComponentScript {
+        static readonly iSubclass: number;
+        message: string;
+        enemyBody: ƒ.ComponentRigidbody;
+        constructor();
+        componentAdded(): any;
+        collision(): any;
     }
 }
 declare namespace Script {

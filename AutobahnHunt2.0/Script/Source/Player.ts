@@ -1,7 +1,5 @@
 namespace Script{
 
-    export let player_lives: number;
-
     export class Player extends AllEntity{
         
         acceleration_left: number;
@@ -22,13 +20,10 @@ namespace Script{
             this.player = graph.getChildrenByName("PlayerCar")[0];
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
-            this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
+            //this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
         }
 
         public move(){
-            if(player_lives != this.getLives()) {
-                this.decreaseLives();
-            }
             
             let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
@@ -59,7 +54,7 @@ namespace Script{
             }
         }
 
-        private async collision() {
+        /*private async collision() {
             player_lives--;
             console.log("collision : " + player_lives);
             if(player_lives <= 0) {
@@ -67,13 +62,12 @@ namespace Script{
                 this.dispatchEvent(new Event("stopGame", {bubbles: true}));
             }
             //sound abspielen
-        }
+        }*/
 
         async loadFile(): Promise<void> {
             let file: Response = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
             this.setLives(this.gameSettings["player_lives"]);
-            player_lives = this.getLives();
             this.acceleration_left = this.gameSettings["acceleration_left"];
             this.acceleration_right = this.gameSettings["acceleration_right"];
         }

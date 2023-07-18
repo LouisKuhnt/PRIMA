@@ -248,6 +248,72 @@
       "type": "MeshCube"
     }
   },
+  "Material|2023-07-18T13:49:20.377Z|06599": {
+    "ƒ.Material": {
+      "name": "Sidewalks",
+      "idResource": "Material|2023-07-18T13:49:20.377Z|06599",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[1, 1, 1, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "Material|2023-07-18T13:51:30.657Z|73590": {
+    "ƒ.Material": {
+      "name": "Sidewalks_Border",
+      "idResource": "Material|2023-07-18T13:51:30.657Z|73590",
+      "shader": "ShaderFlat",
+      "coat": {
+        "ƒ.CoatRemissive": {
+          "color": "[0.7019607843137254, 0.7019607843137254, 0.7019607843137254, 1]",
+          "diffuse": 1,
+          "specular": 0
+        }
+      }
+    }
+  },
+  "MeshRotation|2023-07-18T14:23:51.552Z|40601": {
+    "ƒ.MeshRotation": {
+      "idResource": "MeshRotation|2023-07-18T14:23:51.552Z|40601",
+      "name": "Skybox",
+      "type": "MeshRotation",
+      "shape": {
+        "ƒ.Vector2": [
+          "[4, 0.5]",
+          "[4, 4.000000476837158]"
+        ]
+      },
+      "longitudes": 4
+    }
+  },
+  "Material|2023-07-18T14:33:48.600Z|93912": {
+    "ƒ.Material": {
+      "name": "ShaderLitTextured",
+      "idResource": "Material|2023-07-18T14:33:48.600Z|93912",
+      "shader": "ShaderLitTextured",
+      "coat": {
+        "ƒ.CoatTextured": {
+          "color": "[1, 1, 1, 1]",
+          "idTexture": "TextureImage|2023-07-18T14:33:38.634Z|71417"
+        }
+      }
+    }
+  },
+  "TextureImage|2023-07-18T14:33:38.634Z|71417": {
+    "ƒ.TextureImage": {
+      "url": "Assets\\skybox_city.jpeg",
+      "type": "TextureImage",
+      "Texture": {
+        "idResource": "TextureImage|2023-07-18T14:33:38.634Z|71417",
+        "name": "Assets\\skybox_city.jpeg",
+        "mipmap": "CRISP"
+      }
+    }
+  },
   "Graph|2023-07-11T10:45:19.148Z|55359": {
     "ƒ.Graph": {
       "name": "Game",
@@ -330,7 +396,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.9166666865348816, 0]",
+                            "translation": "[0, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
@@ -2491,72 +2557,6 @@
         "idResource": "TextureImage|2023-07-17T17:31:42.961Z|12769",
         "name": "Assets\\EnemyCar_Color_4.png",
         "mipmap": "CRISP"
-      }
-    }
-  },
-  "Material|2023-07-18T13:49:20.377Z|06599": {
-    "ƒ.Material": {
-      "name": "Sidewalks",
-      "idResource": "Material|2023-07-18T13:49:20.377Z|06599",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[1, 1, 1, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "Material|2023-07-18T13:51:30.657Z|73590": {
-    "ƒ.Material": {
-      "name": "Sidewalks_Border",
-      "idResource": "Material|2023-07-18T13:51:30.657Z|73590",
-      "shader": "ShaderFlat",
-      "coat": {
-        "ƒ.CoatRemissive": {
-          "color": "[0.7019607843137254, 0.7019607843137254, 0.7019607843137254, 1]",
-          "diffuse": 1,
-          "specular": 0
-        }
-      }
-    }
-  },
-  "MeshRotation|2023-07-18T14:23:51.552Z|40601": {
-    "ƒ.MeshRotation": {
-      "idResource": "MeshRotation|2023-07-18T14:23:51.552Z|40601",
-      "name": "Skybox",
-      "type": "MeshRotation",
-      "shape": {
-        "ƒ.Vector2": [
-          "[4, 0.5]",
-          "[4, 4.000000476837158]"
-        ]
-      },
-      "longitudes": 4
-    }
-  },
-  "TextureImage|2023-07-18T14:33:38.634Z|71417": {
-    "ƒ.TextureImage": {
-      "url": "Assets\\skybox_city.jpeg",
-      "type": "TextureImage",
-      "Texture": {
-        "idResource": "TextureImage|2023-07-18T14:33:38.634Z|71417",
-        "name": "Assets\\skybox_city.jpeg",
-        "mipmap": "CRISP"
-      }
-    }
-  },
-  "Material|2023-07-18T14:33:48.600Z|93912": {
-    "ƒ.Material": {
-      "name": "ShaderLitTextured",
-      "idResource": "Material|2023-07-18T14:33:48.600Z|93912",
-      "shader": "ShaderLitTextured",
-      "coat": {
-        "ƒ.CoatTextured": {
-          "color": "[1, 1, 1, 1]",
-          "idTexture": "TextureImage|2023-07-18T14:33:38.634Z|71417"
-        }
       }
     }
   }

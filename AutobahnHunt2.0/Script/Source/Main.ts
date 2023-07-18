@@ -12,12 +12,12 @@ namespace Script {
   let currentTime: number;
   let oldTime: number;
   let isSpawned: boolean = false;
-  let enemyList: Enemy[] = [];
   let playerModel: ƒ.Node;
   let streetModel: ƒ.Node;
   let asphaltModel: ƒ.Node;
   let motorStarted: boolean = false;
-  //let chrashSound: ƒ.ComponentAudio;
+  let enemyControl: Enemy;
+  let chrashSound: ƒ.ComponentAudio;
   let engineStartSound: ƒ.ComponentAudio;
   let engineRunningSound: ƒ.ComponentAudio;
 
@@ -35,12 +35,15 @@ namespace Script {
     playerModel = graph.getChildrenByName("PlayerCar")[0];
     playerControl = new Player();
     playerModel.addChild(playerControl);
+    playerModel.addComponent(new PlayerCollisionDetect());
 
     streetModel = graph.getChildrenByName("Street")[0];
     asphaltModel = streetModel.getChildrenByName("Asphalt")[0];
     streetControl = new Street();
     asphaltModel.addChild(streetControl);
     streetControl.stopStreet();
+
+    enemyControl = new Enemy("Enemy");
 
     ui = new VisualInterface();
 
@@ -51,6 +54,7 @@ namespace Script {
     engineRunningSound.volume = 0;
 
     graph.addEventListener("stopGame", stopGame);
+    graph.addEventListener("collided", collided);
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
@@ -68,9 +72,8 @@ namespace Script {
     if(motorStarted){
       playerControl.move();
     
-      enemyList.forEach(enemy => {
-        enemy.move();
-      });
+      
+      enemyControl.move();
 
       spawnEnemy(highscore);
 
@@ -136,9 +139,12 @@ namespace Script {
 
   function spawnEnemy(spawnTime: number) {
     if((spawnTime%10 == 0 || spawnTime%10 == 5) && !isSpawned) {
+      enemyControl.startEnemy();
       isSpawned = true;
-      enemyList.push(new Enemy("Enemy"));
-      console.log(enemyList);
     }
+  }
+
+  function collided() {
+
   }
 }

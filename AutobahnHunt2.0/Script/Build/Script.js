@@ -65,32 +65,33 @@ var Script;
     class Enemy extends Script.AllEntity {
         speed = 0;
         gameSettings;
-        enemy;
-        enemyBody;
         enemy_lives = 1;
+        enemyList = [];
         startPostionScript = new Script.RandomEnemySpawn();
+        collisionDetect = new Script.EnemyCollisionDetect();
+        randomColor = ["EnemyCar_Color_0.png", "EnemyCar_Color_1.png", "EnemyCar_Color_2.png", "EnemyCar_Color_3.png", "EnemyCar_Color_4.png"];
         constructor(name) {
             super(name, 1);
             this.loadFile();
-            this.startEnemy();
         }
         move() {
-            if (this.enemy_lives != this.getLives()) {
-                this.decreaseLives();
-            }
-            if (this.getLives() >= 0) {
-                this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - this.speed));
-            }
+            this.enemyList.forEach(enemy => {
+                enemy.getComponent(ƒ.ComponentRigidbody).applyForce(new ƒ.Vector3(0, 0, enemy.mtxLocal.getZ().z - this.speed));
+            });
         }
         startEnemy() {
             let enemyInstance;
             enemyInstance = ƒ.Project.createGraphInstance(ƒ.Project.getResourcesByName("EnemyCar")[0]);
             enemyInstance.then(element => {
                 element.addComponent(this.startPostionScript);
-                this.enemy = element;
-                this.enemyBody = element.getComponent(ƒ.ComponentRigidbody);
+                element.addComponent(this.collisionDetect);
+                let chassisChild = element.getChildrenByName("LowerChassis")[0];
+                let chassisMaterial = chassisChild.getComponent(ƒ.ComponentMaterial);
+                chassisChild.removeComponent(chassisMaterial);
+                let mtrEnemy = new ƒ.Material("something", ƒ.ShaderFlatTextured, new ƒ.CoatRemissiveTextured(new ƒ.Color(255, 255, 255, 255), new ƒ.TextureImage(this.getRandomColor())));
+                chassisChild.addComponent(new ƒ.ComponentMaterial(mtrEnemy));
+                this.enemyList.push(element);
                 Script.graph.addChild(element);
-                this.enemyBody.addEventListener("ColliderLeftCollision" /* ƒ.EVENT_PHYSICS.COLLISION_EXIT */, this.collision);
             });
         }
         async loadFile() {
@@ -98,52 +99,38 @@ var Script;
             this.gameSettings = await file.json();
             this.speed = this.gameSettings["enemy_speed"];
         }
-        collision(_event) {
-            console.log("collision_enemy: " + _event.cmpRigidbody.node.name);
-            //console.log("myself: " + _event.);
+        getRandomColor() {
+            let enemyColor = this.randomColor[Math.floor(Math.random() * 5)];
+            return ".\\Assets\\" + enemyColor;
         }
     }
     Script.Enemy = Enemy;
 })(Script || (Script = {}));
-/*namespace Script{
-
-    export class EnemyManager {
-
-        max_enemies: number = 1;
-        enemyList: Enemy[] = [];
-        enemyTemplate: ƒ.Node;
-        currentEnemies: number = 0;
-        startPostionScript: ƒ.Component = new RandomEnemySpawn();
-        
-        constructor(){
-            this.enemyTemplate = graph.getChildrenByName("EnemyCar")[0];
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
+    class EnemyCollisionDetect extends ƒ.ComponentScript {
+        // Register the script as component for use in the editor via drag&drop
+        static iSubclass = ƒ.Component.registerSubclass(Script.CustomComponentScript);
+        // Properties may be mutated by users in the editor via the automatically created user interface
+        message = "EnemyCollisionDetect added to ";
+        enemyBody;
+        constructor() {
+            super();
+            this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.componentAdded);
         }
-
-        /*public startEnemy() {
-            let enemyInstance: Promise<ƒ.GraphInstance>;
-            enemyInstance = ƒ.Project.createGraphInstance(
-            <ƒ.Graph>ƒ.Project.getResourcesByName("EnemyCar")[0]);
-
-            console.log("enemy spawn : " + enemyInstance);
-
-            enemyInstance.then( element => {
-                console.log("enemyManager: " + element);
-                let enemyControl = new Enemy(this.currentEnemies.toString(), element);
-                element.addChild(enemyControl);
-                element.addComponent(this.startPostionScript);
-
-                graph.addChild(element);
-                this.enemyList.push(enemyControl);
-            });
+        componentAdded() {
+            this.enemyBody = this.node.getComponent(ƒ.ComponentRigidbody);
+            this.enemyBody.addEventListener("ColliderLeftCollision" /* ƒ.EVENT_PHYSICS.COLLISION_EXIT */, this.collision);
         }
-
-        public moveEnemy() {
-            this.enemyList.forEach(element => {
-                element.move();
-            });
+        collision() {
+            this.node.activate(false);
+            this.node.removeAllChildren();
         }
     }
-}*/ 
+    Script.EnemyCollisionDetect = EnemyCollisionDetect;
+})(Script || (Script = {}));
 var Script;
 (function (Script) {
     window.addEventListener("load", init);
@@ -189,12 +176,12 @@ var Script;
     let currentTime;
     let oldTime;
     let isSpawned = false;
-    let enemyList = [];
     let playerModel;
     let streetModel;
     let asphaltModel;
     let motorStarted = false;
-    //let chrashSound: ƒ.ComponentAudio;
+    let enemyControl;
+    let chrashSound;
     let engineStartSound;
     let engineRunningSound;
     ƒ.Debug.info("Main Program Template running!");
@@ -206,11 +193,13 @@ var Script;
         playerModel = Script.graph.getChildrenByName("PlayerCar")[0];
         Script.playerControl = new Script.Player();
         playerModel.addChild(Script.playerControl);
+        playerModel.addComponent(new Script.PlayerCollisionDetect());
         streetModel = Script.graph.getChildrenByName("Street")[0];
         asphaltModel = streetModel.getChildrenByName("Asphalt")[0];
         Script.streetControl = new Script.Street();
         asphaltModel.addChild(Script.streetControl);
         Script.streetControl.stopStreet();
+        enemyControl = new Script.Enemy("Enemy");
         Script.ui = new Script.VisualInterface();
         ƒ.AudioManager.default.listenTo(Script.graph);
         engineRunningSound = Script.graph.getComponent(ƒ.ComponentAudio);
@@ -218,6 +207,7 @@ var Script;
         engineRunningSound.loop = true;
         engineRunningSound.volume = 0;
         Script.graph.addEventListener("stopGame", stopGame);
+        Script.graph.addEventListener("collided", collided);
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
@@ -230,9 +220,7 @@ var Script;
         }
         if (motorStarted) {
             Script.playerControl.move();
-            enemyList.forEach(enemy => {
-                enemy.move();
-            });
+            enemyControl.move();
             spawnEnemy(highscore);
             if (highscore % 10 == 1 || highscore % 10 == 6) {
                 isSpawned = false;
@@ -285,10 +273,11 @@ var Script;
     }
     function spawnEnemy(spawnTime) {
         if ((spawnTime % 10 == 0 || spawnTime % 10 == 5) && !isSpawned) {
+            enemyControl.startEnemy();
             isSpawned = true;
-            enemyList.push(new Script.Enemy("Enemy"));
-            console.log(enemyList);
         }
+    }
+    function collided() {
     }
 })(Script || (Script = {}));
 var Script;
@@ -310,12 +299,9 @@ var Script;
             this.player = Script.graph.getChildrenByName("PlayerCar")[0];
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
-            this.body.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.collision);
+            //this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
         }
         move() {
-            if (Script.player_lives != this.getLives()) {
-                this.decreaseLives();
-            }
             let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
             // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
@@ -345,25 +331,55 @@ var Script;
                 // console.log(this.player.mtxWorld.getX().x);
             }
         }
-        async collision() {
-            Script.player_lives--;
-            console.log("collision : " + Script.player_lives);
-            if (Script.player_lives <= 0) {
+        /*private async collision() {
+            player_lives--;
+            console.log("collision : " + player_lives);
+            if(player_lives <= 0) {
                 console.log("dead");
-                this.dispatchEvent(new Event("stopGame", { bubbles: true }));
+                this.dispatchEvent(new Event("stopGame", {bubbles: true}));
             }
             //sound abspielen
-        }
+        }*/
         async loadFile() {
             let file = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
             this.setLives(this.gameSettings["player_lives"]);
-            Script.player_lives = this.getLives();
             this.acceleration_left = this.gameSettings["acceleration_left"];
             this.acceleration_right = this.gameSettings["acceleration_right"];
         }
     }
     Script.Player = Player;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var ƒ = FudgeCore;
+    ƒ.Project.registerScriptNamespace(Script); // Register the namespace to FUDGE for serialization
+    class PlayerCollisionDetect extends ƒ.ComponentScript {
+        // Register the script as component for use in the editor via drag&drop
+        static iSubclass = ƒ.Component.registerSubclass(Script.CustomComponentScript);
+        // Properties may be mutated by users in the editor via the automatically created user interface
+        message = "EnemyCollisionDetect added to ";
+        enemyBody;
+        constructor() {
+            super();
+            this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.componentAdded);
+        }
+        componentAdded() {
+            console.log("added");
+            this.enemyBody = this.node.getComponent(ƒ.ComponentRigidbody);
+            this.enemyBody.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.collision);
+        }
+        collision() {
+            let playerModel = this.node.getChildrenByName("Player")[0];
+            playerModel.lives--;
+            this.dispatchEvent(new Event("collided"));
+            if (playerModel.lives <= 0) {
+                console.log("dead");
+                this.dispatchEvent(new Event("stopGame"));
+            }
+        }
+    }
+    Script.PlayerCollisionDetect = PlayerCollisionDetect;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
