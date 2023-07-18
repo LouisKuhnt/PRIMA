@@ -9,16 +9,15 @@ namespace Script {
         public message: string = "CustomComponentScript added to ";
 
         private possiblePositions: ƒ.Vector3[] = [
-            new ƒ.Vector3(26, 1, 500),
-            new ƒ.Vector3(-26, 1, 500),
-            new ƒ.Vector3(0, 1, 500)
+            new ƒ.Vector3(26, 1, 1250),
+            new ƒ.Vector3(-26, 1, 1250),
+            new ƒ.Vector3(0, 1, 1250)
         ];
 
         constructor() {
             super();
             this.addEventListener(ƒ.EVENT.COMPONENT_ADD, this.generateRandomSpawn);
         }
-//this.possiblePositions[ƒ.Random.default.getRange(0,2)]
         public generateRandomSpawn(): void {
             let rndNumber = Math.floor(Math.random() * 3);
             console.log("ComponentScript : " + this.node.mtxLocal.get());

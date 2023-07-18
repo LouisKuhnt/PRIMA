@@ -1,8 +1,10 @@
 declare namespace Script {
     class AllEntity extends ƒ.Node {
         lives: number;
-        constructor(name: string, lives: number);
-        protected collision(): void;
+        constructor(name: string, lives?: number);
+        getLives(): number;
+        protected setLives(lives: number): void;
+        decreaseLives(): void;
     }
 }
 declare namespace Script {
@@ -15,18 +17,18 @@ declare namespace Script {
     }
 }
 declare namespace Script {
-    let enemyLive: number;
     class Enemy extends AllEntity {
         speed: number;
-        acceleration: number;
         gameSettings: CustomJson;
         enemy: ƒ.GraphInstance;
         enemyBody: ƒ.ComponentRigidbody;
+        enemy_lives: number;
         startPostionScript: ƒ.Component;
         constructor(name: string);
         move(): void;
         startEnemy(): void;
         loadFile(): Promise<void>;
+        private collision;
     }
 }
 declare namespace Script {
@@ -46,7 +48,7 @@ declare namespace Script {
     let playerControl: Player;
 }
 declare namespace Script {
-    let lives: number;
+    let player_lives: number;
     class Player extends AllEntity {
         acceleration_left: number;
         acceleration_right: number;
@@ -59,6 +61,7 @@ declare namespace Script {
         gameSettings: CustomJson;
         constructor();
         move(): void;
+        private collision;
         loadFile(): Promise<void>;
     }
 }

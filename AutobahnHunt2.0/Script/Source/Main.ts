@@ -50,6 +50,7 @@ namespace Script {
     engineRunningSound.loop = true;
     engineRunningSound.volume = 0;
 
+    graph.addEventListener("stopGame", stopGame);
     ƒ.Loop.addEventListener(ƒ.EVENT.LOOP_FRAME, update);
     ƒ.Loop.start();  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
   }
@@ -58,7 +59,7 @@ namespace Script {
     ƒ.Physics.simulate();  // if physics is included and used
     
     ui.highscore = highscore;
-    ui.lives = lives;
+    ui.lives = playerControl.getLives();
 
     if(ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted){
         startGame();
@@ -83,9 +84,9 @@ namespace Script {
         highscore++;
       }
   
-      if(lives <= 0) {
+      /*if(playerControl.getLives() <= 0) {
         stopGame();
-      }
+      }*/
     }
 
     viewport.draw();
@@ -99,7 +100,7 @@ namespace Script {
     viewport.camera = cameraComponent;
     //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
     viewport.camera.mtxPivot.rotateY(0);
-    viewport.camera.mtxPivot.rotateX(20);
+    viewport.camera.mtxPivot.rotateX(17);
     viewport.camera.mtxPivot.rotateZ(0);
     viewport.camera.mtxPivot.translateZ(-200);
     viewport.camera.mtxPivot.translateY(0);
@@ -108,6 +109,7 @@ namespace Script {
   }
 
   function stopGame() {
+    console.log("endGame");
     let deadScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#deadScreen");
     deadScreen.style.display = "block";
 

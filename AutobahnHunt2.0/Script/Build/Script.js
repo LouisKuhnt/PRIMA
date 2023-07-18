@@ -5,15 +5,20 @@ var Script;
     // that if enemy.ts is above entity the Enemy will be build before Entity - so 
     // the class would be used before its declaration.
     class AllEntity extends ƒ.Node {
-        lives;
-        constructor(name, lives) {
+        lives = 0;
+        constructor(name, lives = 3) {
             super(name);
             this.lives = lives;
-            console.log("constructor: " + this.lives);
         }
-        collision() {
-            console.log("hit " + Script.lives);
-            Script.lives--;
+        getLives() {
+            return this.lives;
+        }
+        setLives(lives) {
+            this.lives = lives;
+        }
+        decreaseLives() {
+            this.lives--;
+            console.log("d : " + this.lives);
         }
     }
     Script.AllEntity = AllEntity;
@@ -59,10 +64,10 @@ var Script;
 (function (Script) {
     class Enemy extends Script.AllEntity {
         speed = 0;
-        acceleration;
         gameSettings;
         enemy;
         enemyBody;
+        enemy_lives = 1;
         startPostionScript = new Script.RandomEnemySpawn();
         constructor(name) {
             super(name, 1);
@@ -70,26 +75,32 @@ var Script;
             this.startEnemy();
         }
         move() {
-            if (Script.lives >= 0) {
-                this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - 400));
+            if (this.enemy_lives != this.getLives()) {
+                this.decreaseLives();
+            }
+            if (this.getLives() >= 0) {
+                this.enemyBody.applyForce(new ƒ.Vector3(0, 0, this.enemy.mtxLocal.getZ().z - this.speed));
             }
         }
         startEnemy() {
             let enemyInstance;
             enemyInstance = ƒ.Project.createGraphInstance(ƒ.Project.getResourcesByName("EnemyCar")[0]);
-            console.log("enemy spawn : " + enemyInstance);
             enemyInstance.then(element => {
                 element.addComponent(this.startPostionScript);
                 this.enemy = element;
                 this.enemyBody = element.getComponent(ƒ.ComponentRigidbody);
                 Script.graph.addChild(element);
+                this.enemyBody.addEventListener("ColliderLeftCollision" /* ƒ.EVENT_PHYSICS.COLLISION_EXIT */, this.collision);
             });
         }
         async loadFile() {
             let file = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            this.speed = this.gameSettings["speed"];
-            this.acceleration = this.gameSettings["acceleration"];
+            this.speed = this.gameSettings["enemy_speed"];
+        }
+        collision(_event) {
+            console.log("collision_enemy: " + _event.cmpRigidbody.node.name);
+            //console.log("myself: " + _event.);
         }
     }
     Script.Enemy = Enemy;
@@ -206,13 +217,14 @@ var Script;
         engineRunningSound.play(true);
         engineRunningSound.loop = true;
         engineRunningSound.volume = 0;
+        Script.graph.addEventListener("stopGame", stopGame);
         ƒ.Loop.addEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.start(); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
     }
     function update(_event) {
         ƒ.Physics.simulate(); // if physics is included and used
         Script.ui.highscore = highscore;
-        Script.ui.lives = Script.lives;
+        Script.ui.lives = Script.playerControl.getLives();
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted) {
             startGame();
         }
@@ -230,9 +242,9 @@ var Script;
             if (oldTime != currentTime) {
                 highscore++;
             }
-            if (Script.lives <= 0) {
-                stopGame();
-            }
+            /*if(playerControl.getLives() <= 0) {
+              stopGame();
+            }*/
         }
         Script.viewport.draw();
         ƒ.AudioManager.default.update();
@@ -244,7 +256,7 @@ var Script;
         Script.viewport.camera = cameraComponent;
         //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
         Script.viewport.camera.mtxPivot.rotateY(0);
-        Script.viewport.camera.mtxPivot.rotateX(20);
+        Script.viewport.camera.mtxPivot.rotateX(17);
         Script.viewport.camera.mtxPivot.rotateZ(0);
         Script.viewport.camera.mtxPivot.translateZ(-200);
         Script.viewport.camera.mtxPivot.translateY(0);
@@ -252,6 +264,7 @@ var Script;
         cameraNode.addComponent(cameraComponent);
     }
     function stopGame() {
+        console.log("endGame");
         let deadScreen = document.querySelector("#deadScreen");
         deadScreen.style.display = "block";
         let p = document.createElement("p");
@@ -295,12 +308,14 @@ var Script;
             // load external config
             this.loadFile();
             this.player = Script.graph.getChildrenByName("PlayerCar")[0];
-            console.log("player: " + this.player);
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
             this.body.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.collision);
         }
         move() {
+            if (Script.player_lives != this.getLives()) {
+                this.decreaseLives();
+            }
             let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
             // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
@@ -330,10 +345,20 @@ var Script;
                 // console.log(this.player.mtxWorld.getX().x);
             }
         }
+        async collision() {
+            Script.player_lives--;
+            console.log("collision : " + Script.player_lives);
+            if (Script.player_lives <= 0) {
+                console.log("dead");
+                this.dispatchEvent(new Event("stopGame", { bubbles: true }));
+            }
+            //sound abspielen
+        }
         async loadFile() {
             let file = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
-            Script.lives = this.gameSettings["lives"];
+            this.setLives(this.gameSettings["player_lives"]);
+            Script.player_lives = this.getLives();
             this.acceleration_left = this.gameSettings["acceleration_left"];
             this.acceleration_right = this.gameSettings["acceleration_right"];
         }
@@ -350,15 +375,14 @@ var Script;
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "CustomComponentScript added to ";
         possiblePositions = [
-            new ƒ.Vector3(26, 1, 500),
-            new ƒ.Vector3(-26, 1, 500),
-            new ƒ.Vector3(0, 1, 500)
+            new ƒ.Vector3(26, 1, 1250),
+            new ƒ.Vector3(-26, 1, 1250),
+            new ƒ.Vector3(0, 1, 1250)
         ];
         constructor() {
             super();
             this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.generateRandomSpawn);
         }
-        //this.possiblePositions[ƒ.Random.default.getRange(0,2)]
         generateRandomSpawn() {
             let rndNumber = Math.floor(Math.random() * 3);
             console.log("ComponentScript : " + this.node.mtxLocal.get());

@@ -5,17 +5,24 @@ namespace Script {
     // the class would be used before its declaration.
     export class AllEntity extends ƒ.Node {
 
-        lives: number;
+        lives: number = 0;
 
-        constructor(name: string, lives: number) {
+        constructor(name: string, lives: number = 3) {
             super(name);
             this.lives = lives;
-            console.log("constructor: " + this.lives);
         }
 
-        protected collision() {
-            console.log("hit " + lives);
-            lives--;
+        public getLives(): number {
+            return this.lives;
+        }
+
+        protected setLives(lives: number) {
+            this.lives = lives;
+        }
+
+        public decreaseLives() {
+            this.lives--;
+            console.log("d : " + this.lives);
         }
     }
 }
