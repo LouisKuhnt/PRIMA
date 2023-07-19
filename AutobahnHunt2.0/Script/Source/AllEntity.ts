@@ -19,10 +19,5 @@ namespace Script {
         protected setLives(lives: number) {
             this.lives = lives;
         }
-
-        public decreaseLives() {
-            this.lives--;
-            console.log("d : " + this.lives);
-        }
     }
 }

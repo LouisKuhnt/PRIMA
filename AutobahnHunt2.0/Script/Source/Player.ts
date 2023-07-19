@@ -20,49 +20,23 @@ namespace Script{
             this.player = graph.getChildrenByName("PlayerCar")[0];
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
-            //this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
         }
 
         public move(){
             
             let turn: number = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
-            // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
-            // this.player.mtxLocal.translate(new ƒ.Vector3(0 ,0 , this.player.mtxLocal.getZ().z));
-            // this.transform.transform(ƒ.Vector3.SCALE(this.player.mtxLocal.getZ(), this.ctrTurn.getOutput()), null,this.player)
             
             if(turn == -1 && this.positionX >= -25) {
-                //console.log("rechts")
                 this.newCoordinates = new ƒ.Vector3(this.acceleration_right, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX--;
-                //console.log("Rechts: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
-                //console.log("pos. rechts: " + this.newCoordinates)
-                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
             } else if(turn == 1 && this.positionX <= 25){
-                //console.log("links")
                 this.newCoordinates = new ƒ.Vector3(this.acceleration_left, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX++;
-                //console.log("Links: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
-                //console.log("pos. links: " + this.newCoordinates)
-                //this.player.mtxLocal.translate(this.newCoordinates);
-            } else {
-                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
-                //this.transform.mtxLocal.translate(ƒ.Vector3.ZERO());
-                // console.log(this.player.mtxWorld.getX().x);
             }
         }
-
-        /*private async collision() {
-            player_lives--;
-            console.log("collision : " + player_lives);
-            if(player_lives <= 0) {
-                console.log("dead");
-                this.dispatchEvent(new Event("stopGame", {bubbles: true}));
-            }
-            //sound abspielen
-        }*/
 
         async loadFile(): Promise<void> {
             let file: Response = await fetch("configuration-game.json");

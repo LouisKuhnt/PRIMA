@@ -16,10 +16,6 @@ var Script;
         setLives(lives) {
             this.lives = lives;
         }
-        decreaseLives() {
-            this.lives--;
-            console.log("d : " + this.lives);
-        }
     }
     Script.AllEntity = AllEntity;
 })(Script || (Script = {}));
@@ -63,45 +59,11 @@ var Script;
 var Script;
 (function (Script) {
     class Enemy extends Script.AllEntity {
-        speed = 0;
-        gameSettings;
-        enemy_lives = 1;
-        enemyList = [];
-        startPostionScript = new Script.RandomEnemySpawn();
-        collisionDetect = new Script.EnemyCollisionDetect();
-        randomColor = ["EnemyCar_Color_0.png", "EnemyCar_Color_1.png", "EnemyCar_Color_2.png", "EnemyCar_Color_3.png", "EnemyCar_Color_4.png"];
-        constructor(name) {
-            super(name, 1);
-            this.loadFile();
+        constructor(name, lives) {
+            super(name, lives);
         }
-        move() {
-            this.enemyList.forEach(enemy => {
-                enemy.getComponent(ƒ.ComponentRigidbody).applyForce(new ƒ.Vector3(0, 0, enemy.mtxLocal.getZ().z - this.speed));
-            });
-        }
-        startEnemy() {
-            let enemyInstance;
-            enemyInstance = ƒ.Project.createGraphInstance(ƒ.Project.getResourcesByName("EnemyCar")[0]);
-            enemyInstance.then(element => {
-                element.addComponent(this.startPostionScript);
-                element.addComponent(this.collisionDetect);
-                let chassisChild = element.getChildrenByName("LowerChassis")[0];
-                let chassisMaterial = chassisChild.getComponent(ƒ.ComponentMaterial);
-                chassisChild.removeComponent(chassisMaterial);
-                let mtrEnemy = new ƒ.Material("something", ƒ.ShaderFlatTextured, new ƒ.CoatRemissiveTextured(new ƒ.Color(255, 255, 255, 255), new ƒ.TextureImage(this.getRandomColor())));
-                chassisChild.addComponent(new ƒ.ComponentMaterial(mtrEnemy));
-                this.enemyList.push(element);
-                Script.graph.addChild(element);
-            });
-        }
-        async loadFile() {
-            let file = await fetch("configuration-game.json");
-            this.gameSettings = await file.json();
-            this.speed = this.gameSettings["enemy_speed"];
-        }
-        getRandomColor() {
-            let enemyColor = this.randomColor[Math.floor(Math.random() * 5)];
-            return ".\\Assets\\" + enemyColor;
+        decreaseLive() {
+            this.lives--;
         }
     }
     Script.Enemy = Enemy;
@@ -125,11 +87,80 @@ var Script;
             this.enemyBody.addEventListener("ColliderLeftCollision" /* ƒ.EVENT_PHYSICS.COLLISION_EXIT */, this.collision);
         }
         collision() {
-            this.node.activate(false);
-            this.node.removeAllChildren();
+            //@ts-ignore
+            this.node.getChildrenByName("Enemy")[0].decreaseLive();
+            this.dispatchEvent(new Event("deleteEnemyCar"));
+            this.removeEventListener("ColliderLeftCollision" /* ƒ.EVENT_PHYSICS.COLLISION_EXIT */, this.collision);
         }
     }
     Script.EnemyCollisionDetect = EnemyCollisionDetect;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    class EnemyManager {
+        speed = 0;
+        gameSettings;
+        spawn_interval = 0;
+        enemyList = [];
+        isSpawned = false;
+        startPostionScript = new Script.RandomEnemySpawn();
+        collisionDetect = new Script.EnemyCollisionDetect();
+        randomColor = ["EnemyCar_Color_0.png", "EnemyCar_Color_1.png", "EnemyCar_Color_2.png", "EnemyCar_Color_3.png", "EnemyCar_Color_4.png"];
+        constructor() {
+            this.loadFile();
+        }
+        checkLives() {
+            this.enemyList.forEach(enemy => {
+                let enemyChild = enemy.getChildrenByName("Enemy")[0];
+                //@ts-ignore
+                if (enemyChild.getLives() <= 0) {
+                    this.enemyList.splice(this.enemyList.indexOf(enemy), 1);
+                    Script.graph.removeChild(enemy);
+                }
+            });
+        }
+        move() {
+            this.enemyList.forEach(enemy => {
+                enemy.getComponent(ƒ.ComponentRigidbody).applyForce(new ƒ.Vector3(0, 0, enemy.mtxLocal.getZ().z - this.speed));
+            });
+        }
+        startEnemy() {
+            let enemyInstance;
+            enemyInstance = ƒ.Project.createGraphInstance(ƒ.Project.getResourcesByName("EnemyCar")[0]);
+            enemyInstance.then(element => {
+                element.addComponent(this.startPostionScript);
+                element.addComponent(this.collisionDetect);
+                element.addChild(new Script.Enemy("Enemy", 1));
+                let chassisChild = element.getChildrenByName("LowerChassis")[0];
+                let chassisMaterial = chassisChild.getComponent(ƒ.ComponentMaterial);
+                chassisChild.removeComponent(chassisMaterial);
+                let mtrEnemy = new ƒ.Material("something", ƒ.ShaderFlatTextured, new ƒ.CoatRemissiveTextured(new ƒ.Color(255, 255, 255, 255), new ƒ.TextureImage(this.getRandomColor())));
+                chassisChild.addComponent(new ƒ.ComponentMaterial(mtrEnemy));
+                this.enemyList.push(element);
+                Script.graph.addChild(element);
+            });
+        }
+        async loadFile() {
+            let file = await fetch("configuration-game.json");
+            this.gameSettings = await file.json();
+            this.speed = this.gameSettings["enemy_speed"];
+            this.spawn_interval = this.gameSettings["spawn_interval"];
+        }
+        getRandomColor() {
+            let enemyColor = this.randomColor[Math.floor(Math.random() * 5)];
+            return ".\\Assets\\" + enemyColor;
+        }
+        spawnEnemy(spawnTime) {
+            if ((spawnTime % this.spawn_interval == 0) && !this.isSpawned) {
+                this.startEnemy();
+                this.isSpawned = true;
+            }
+            if (spawnTime % this.spawn_interval == 1) {
+                this.isSpawned = false;
+            }
+        }
+    }
+    Script.EnemyManager = EnemyManager;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {
@@ -172,35 +203,38 @@ var Script;
 (function (Script) {
     var ƒ = FudgeCore;
     let cameraNode;
+    let viewport;
+    let ui;
+    let streetControl;
+    let playerControl;
     let highscore = 0;
     let currentTime;
     let oldTime;
-    let isSpawned = false;
     let playerModel;
     let streetModel;
     let asphaltModel;
     let motorStarted = false;
     let enemyControl;
-    let chrashSound;
+    let crashSound;
     let engineStartSound;
     let engineRunningSound;
     ƒ.Debug.info("Main Program Template running!");
     document.addEventListener("interactiveViewportStarted", start);
     function start(_event) {
-        Script.viewport = _event.detail;
-        Script.graph = Script.viewport.getBranch();
+        viewport = _event.detail;
+        Script.graph = viewport.getBranch();
         setCamera();
         playerModel = Script.graph.getChildrenByName("PlayerCar")[0];
-        Script.playerControl = new Script.Player();
-        playerModel.addChild(Script.playerControl);
+        playerControl = new Script.Player();
+        playerModel.addChild(playerControl);
         playerModel.addComponent(new Script.PlayerCollisionDetect());
         streetModel = Script.graph.getChildrenByName("Street")[0];
         asphaltModel = streetModel.getChildrenByName("Asphalt")[0];
-        Script.streetControl = new Script.Street();
-        asphaltModel.addChild(Script.streetControl);
-        Script.streetControl.stopStreet();
-        enemyControl = new Script.Enemy("Enemy");
-        Script.ui = new Script.VisualInterface();
+        streetControl = new Script.Street();
+        asphaltModel.addChild(streetControl);
+        streetControl.stopStreet();
+        enemyControl = new Script.EnemyManager();
+        ui = new Script.VisualInterface();
         ƒ.AudioManager.default.listenTo(Script.graph);
         engineRunningSound = Script.graph.getComponent(ƒ.ComponentAudio);
         engineRunningSound.play(true);
@@ -213,56 +247,46 @@ var Script;
     }
     function update(_event) {
         ƒ.Physics.simulate(); // if physics is included and used
-        Script.ui.highscore = highscore;
-        Script.ui.lives = Script.playerControl.getLives();
+        ui.highscore = highscore;
+        ui.lives = playerControl.getLives();
         if (ƒ.Keyboard.isPressedOne([ƒ.KEYBOARD_CODE.SPACE]) && !motorStarted) {
             startGame();
         }
         if (motorStarted) {
-            Script.playerControl.move();
+            playerControl.move();
+            enemyControl.checkLives();
             enemyControl.move();
-            spawnEnemy(highscore);
-            if (highscore % 10 == 1 || highscore % 10 == 6) {
-                isSpawned = false;
-            }
+            enemyControl.spawnEnemy(highscore);
             oldTime = currentTime;
             currentTime = Math.floor(ƒ.Time.game.get() / 1000);
             if (oldTime != currentTime) {
                 highscore++;
             }
-            /*if(playerControl.getLives() <= 0) {
-              stopGame();
-            }*/
         }
-        Script.viewport.draw();
+        viewport.draw();
         ƒ.AudioManager.default.update();
     }
     function setCamera() {
         cameraNode = new ƒ.Node("camNode");
         let cameraComponent = new ƒ.ComponentCamera();
-        //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
-        Script.viewport.camera = cameraComponent;
-        //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
-        Script.viewport.camera.mtxPivot.rotateY(0);
-        Script.viewport.camera.mtxPivot.rotateX(17);
-        Script.viewport.camera.mtxPivot.rotateZ(0);
-        Script.viewport.camera.mtxPivot.translateZ(-200);
-        Script.viewport.camera.mtxPivot.translateY(0);
-        Script.viewport.camera.mtxPivot.translateX(0);
+        viewport.camera = cameraComponent;
+        viewport.camera.mtxPivot.rotateX(17);
+        viewport.camera.mtxPivot.translateZ(-200);
         cameraNode.addComponent(cameraComponent);
     }
     function stopGame() {
+        ui.lives = 0;
         console.log("endGame");
         let deadScreen = document.querySelector("#deadScreen");
         deadScreen.style.display = "block";
         let p = document.createElement("p");
-        p.innerHTML = "You died <br> Score: " + Script.ui.highscore;
+        p.innerHTML = "You died <br> Score: " + ui.highscore;
         deadScreen.appendChild(p);
         ƒ.Loop.removeEventListener("loopFrame" /* ƒ.EVENT.LOOP_FRAME */, update);
         ƒ.Loop.stop();
     }
     function startGame() {
-        Script.streetControl.startStreet();
+        streetControl.startStreet();
         engineStartSound = playerModel.getComponent(ƒ.ComponentAudio);
         engineStartSound.volume = 0.1;
         engineStartSound.play(true);
@@ -271,13 +295,10 @@ var Script;
         startScreen.remove();
         motorStarted = true;
     }
-    function spawnEnemy(spawnTime) {
-        if ((spawnTime % 10 == 0 || spawnTime % 10 == 5) && !isSpawned) {
-            enemyControl.startEnemy();
-            isSpawned = true;
-        }
-    }
     function collided() {
+        crashSound = streetModel.getComponent(ƒ.ComponentAudio);
+        crashSound.volume = 0.1;
+        crashSound.play(true);
     }
 })(Script || (Script = {}));
 var Script;
@@ -299,47 +320,21 @@ var Script;
             this.player = Script.graph.getChildrenByName("PlayerCar")[0];
             this.body = this.player.getComponent(ƒ.ComponentRigidbody);
             this.transform = this.player.getComponent(ƒ.ComponentTransform);
-            //this.body.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
         }
         move() {
             let turn = ƒ.Keyboard.mapToTrit([ƒ.KEYBOARD_CODE.A, ƒ.KEYBOARD_CODE.ARROW_LEFT], [ƒ.KEYBOARD_CODE.D, ƒ.KEYBOARD_CODE.ARROW_RIGHT]);
             this.ctrTurn.setInput(turn);
-            // this.body.applyTorque(ƒ.Vector3.SCALE(this.player.mtxLocal.getX(), this.ctrTurn.getOutput()));
-            // this.player.mtxLocal.translate(new ƒ.Vector3(0 ,0 , this.player.mtxLocal.getZ().z));
-            // this.transform.transform(ƒ.Vector3.SCALE(this.player.mtxLocal.getZ(), this.ctrTurn.getOutput()), null,this.player)
             if (turn == -1 && this.positionX >= -25) {
-                //console.log("rechts")
                 this.newCoordinates = new ƒ.Vector3(this.acceleration_right, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX--;
-                //console.log("Rechts: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
-                //console.log("pos. rechts: " + this.newCoordinates)
-                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
             }
             else if (turn == 1 && this.positionX <= 25) {
-                //console.log("links")
                 this.newCoordinates = new ƒ.Vector3(this.acceleration_left, 0, 0);
                 this.transform.mtxLocal.translate(this.newCoordinates);
                 this.positionX++;
-                //console.log("Links: X" + this.player.mtxLocal.getX() + " Y " + this.player.mtxLocal.getY() + " Z " + this.player.mtxLocal.getZ())
-                //console.log("pos. links: " + this.newCoordinates)
-                //this.player.mtxLocal.translate(this.newCoordinates);
-            }
-            else {
-                //this.player.mtxLocal.translate(ƒ.Vector3.ZERO());
-                //this.transform.mtxLocal.translate(ƒ.Vector3.ZERO());
-                // console.log(this.player.mtxWorld.getX().x);
             }
         }
-        /*private async collision() {
-            player_lives--;
-            console.log("collision : " + player_lives);
-            if(player_lives <= 0) {
-                console.log("dead");
-                this.dispatchEvent(new Event("stopGame", {bubbles: true}));
-            }
-            //sound abspielen
-        }*/
         async loadFile() {
             let file = await fetch("configuration-game.json");
             this.gameSettings = await file.json();
@@ -365,17 +360,17 @@ var Script;
             this.addEventListener("componentAdd" /* ƒ.EVENT.COMPONENT_ADD */, this.componentAdded);
         }
         componentAdded() {
-            console.log("added");
             this.enemyBody = this.node.getComponent(ƒ.ComponentRigidbody);
             this.enemyBody.addEventListener("ColliderEnteredCollision" /* ƒ.EVENT_PHYSICS.COLLISION_ENTER */, this.collision);
         }
         collision() {
             let playerModel = this.node.getChildrenByName("Player")[0];
+            //@ts-ignore
             playerModel.lives--;
-            this.dispatchEvent(new Event("collided"));
+            this.node.getParent().dispatchEvent(new Event("collided"));
+            //@ts-ignore
             if (playerModel.lives <= 0) {
-                console.log("dead");
-                this.dispatchEvent(new Event("stopGame"));
+                this.node.getParent().dispatchEvent(new Event("stopGame"));
             }
         }
     }
@@ -389,7 +384,7 @@ var Script;
         // Register the script as component for use in the editor via drag&drop
         static iSubclass = ƒ.Component.registerSubclass(Script.CustomComponentScript);
         // Properties may be mutated by users in the editor via the automatically created user interface
-        message = "CustomComponentScript added to ";
+        message = "RandomEnemySpawn added to ";
         possiblePositions = [
             new ƒ.Vector3(26, 1, 1250),
             new ƒ.Vector3(-26, 1, 1250),
@@ -401,7 +396,6 @@ var Script;
         }
         generateRandomSpawn() {
             let rndNumber = Math.floor(Math.random() * 3);
-            console.log("ComponentScript : " + this.node.mtxLocal.get());
             this.node.mtxLocal.translate(this.possiblePositions[rndNumber]);
         }
     }
@@ -412,15 +406,11 @@ var Script;
     var ƒ = FudgeCore;
     // Street Node
     class Street extends ƒ.Node {
-        acceleration;
-        gameSettings;
         street;
         asphalt;
         asphaltSprite;
         constructor() {
             super("Street");
-            // load external file
-            this.loadFile();
             this.street = Script.graph.getChildrenByName("Street")[0];
             this.asphalt = this.street.getChildrenByName("Asphalt")[0];
             this.asphaltSprite = this.asphalt.getComponent(ƒ.ComponentAnimator);
@@ -430,11 +420,6 @@ var Script;
         }
         startStreet() {
             this.asphaltSprite.playmode = ƒ.ANIMATION_PLAYMODE.LOOP;
-        }
-        async loadFile() {
-            let file = await fetch("configuration-game.json");
-            this.gameSettings = await file.json();
-            this.acceleration = this.gameSettings["acceleration"];
         }
     }
     Script.Street = Street;

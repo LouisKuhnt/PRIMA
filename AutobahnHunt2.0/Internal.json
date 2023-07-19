@@ -205,14 +205,6 @@
       "type": "Audio"
     }
   },
-  "Audio|2023-07-13T14:49:48.481Z|23945": {
-    "ƒ.Audio": {
-      "url": "Assets\\crash.mp3",
-      "idResource": "Audio|2023-07-13T14:49:48.481Z|23945",
-      "name": "Assets\\crash.mp3",
-      "type": "Audio"
-    }
-  },
   "Audio|2023-07-13T14:49:07.027Z|54915": {
     "ƒ.Audio": {
       "url": "Assets\\carengine.mp3",
@@ -360,7 +352,7 @@
                 {
                   "ƒ.ComponentAudio": {
                     "active": true,
-                    "idResource": "Audio|2023-07-13T14:49:48.481Z|23945",
+                    "idResource": "Audio|2023-07-19T13:41:29.218Z|01583",
                     "playing": false,
                     "loop": false,
                     "volume": 1
@@ -396,7 +388,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0, 0]",
+                            "translation": "[0.6666666865348816, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
@@ -2558,6 +2550,14 @@
         "name": "Assets\\EnemyCar_Color_4.png",
         "mipmap": "CRISP"
       }
+    }
+  },
+  "Audio|2023-07-19T13:41:29.218Z|01583": {
+    "ƒ.Audio": {
+      "url": "Assets\\crash.mp3",
+      "idResource": "Audio|2023-07-19T13:41:29.218Z|01583",
+      "name": "Assets\\crash.mp3",
+      "type": "Audio"
     }
   }
 }

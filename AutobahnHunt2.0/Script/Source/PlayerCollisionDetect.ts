@@ -17,18 +17,18 @@ namespace Script {
       }
   
       public componentAdded(): any {
-          console.log("added");
         this.enemyBody = this.node.getComponent(ƒ.ComponentRigidbody);
         this.enemyBody.addEventListener(ƒ.EVENT_PHYSICS.COLLISION_ENTER, this.collision);
       }
 
       public collision(): any {
           let playerModel = this.node.getChildrenByName("Player")[0];
+          //@ts-ignore
           playerModel.lives--;
-          this.dispatchEvent(new Event("collided"));
+          this.node.getParent().dispatchEvent(new Event("collided"));
+          //@ts-ignore
           if(playerModel.lives <= 0) {
-            console.log("dead");
-            this.dispatchEvent(new Event("stopGame"));
+            this.node.getParent().dispatchEvent(new Event("stopGame"));
           }
       }
     }

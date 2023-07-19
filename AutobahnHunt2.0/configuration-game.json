@@ -1,6 +1,7 @@
 {
-    "enemy_speed": 800,
+    "enemy_speed": 1600,
     "acceleration_left": 1,
     "acceleration_right": -1,
-    "player_lives": 3
+    "player_lives": 3,
+    "spawn_interval": 2
 }

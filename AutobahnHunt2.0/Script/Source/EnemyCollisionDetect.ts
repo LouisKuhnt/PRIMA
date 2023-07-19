@@ -22,8 +22,10 @@ namespace Script {
       }
 
       public collision(): any {
-          this.node.activate(false);
-          this.node.removeAllChildren();
+          //@ts-ignore
+          this.node.getChildrenByName("Enemy")[0].decreaseLive();
+          this.dispatchEvent(new Event("deleteEnemyCar"));
+          this.removeEventListener(ƒ.EVENT_PHYSICS.COLLISION_EXIT, this.collision);
       }
     }
   }

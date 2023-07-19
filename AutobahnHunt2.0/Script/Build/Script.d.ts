@@ -4,7 +4,6 @@ declare namespace Script {
         constructor(name: string, lives?: number);
         getLives(): number;
         protected setLives(lives: number): void;
-        decreaseLives(): void;
     }
 }
 declare namespace Script {
@@ -18,18 +17,8 @@ declare namespace Script {
 }
 declare namespace Script {
     class Enemy extends AllEntity {
-        speed: number;
-        gameSettings: CustomJson;
-        enemy_lives: number;
-        enemyList: ƒ.GraphInstance[];
-        startPostionScript: ƒ.Component;
-        collisionDetect: ƒ.Component;
-        randomColor: string[];
-        constructor(name: string);
-        move(): void;
-        startEnemy(): void;
-        loadFile(): Promise<void>;
-        private getRandomColor;
+        constructor(name: string, lives: number);
+        decreaseLive(): void;
     }
 }
 declare namespace Script {
@@ -44,6 +33,25 @@ declare namespace Script {
     }
 }
 declare namespace Script {
+    class EnemyManager {
+        speed: number;
+        gameSettings: CustomJson;
+        spawn_interval: number;
+        enemyList: ƒ.GraphInstance[];
+        isSpawned: boolean;
+        startPostionScript: ƒ.Component;
+        collisionDetect: ƒ.Component;
+        randomColor: string[];
+        constructor();
+        checkLives(): void;
+        move(): void;
+        startEnemy(): void;
+        loadFile(): Promise<void>;
+        private getRandomColor;
+        spawnEnemy(spawnTime: number): void;
+    }
+}
+declare namespace Script {
     let canvas: HTMLCanvasElement;
 }
 declare namespace Script {
@@ -54,10 +62,6 @@ declare namespace Script {
 declare namespace Script {
     import ƒ = FudgeCore;
     let graph: ƒ.Node;
-    let viewport: ƒ.Viewport;
-    let ui: VisualInterface;
-    let streetControl: Street;
-    let playerControl: Player;
 }
 declare namespace Script {
     class Player extends AllEntity {
@@ -99,15 +103,12 @@ declare namespace Script {
 declare namespace Script {
     import ƒ = FudgeCore;
     class Street extends ƒ.Node {
-        acceleration: number;
-        gameSettings: CustomJson;
         street: ƒ.Node;
         asphalt: ƒ.Node;
         asphaltSprite: ƒ.ComponentAnimator;
         constructor();
         stopStreet(): void;
         startStreet(): void;
-        loadFile(): Promise<void>;
     }
 }
 declare namespace Script {

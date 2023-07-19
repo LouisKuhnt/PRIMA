@@ -6,7 +6,7 @@ namespace Script {
         // Register the script as component for use in the editor via drag&drop
         public static readonly iSubclass: number = ƒ.Component.registerSubclass(CustomComponentScript);
         // Properties may be mutated by users in the editor via the automatically created user interface
-        public message: string = "CustomComponentScript added to ";
+        public message: string = "RandomEnemySpawn added to ";
 
         private possiblePositions: ƒ.Vector3[] = [
             new ƒ.Vector3(26, 1, 1250),
@@ -20,7 +20,6 @@ namespace Script {
         }
         public generateRandomSpawn(): void {
             let rndNumber = Math.floor(Math.random() * 3);
-            console.log("ComponentScript : " + this.node.mtxLocal.get());
             this.node.mtxLocal.translate(this.possiblePositions[rndNumber]);
         }
     }

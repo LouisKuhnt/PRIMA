@@ -3,21 +3,20 @@ namespace Script {
 
   let cameraNode: ƒ.Node;
   export let graph: ƒ.Node;
-  export let viewport: ƒ.Viewport;
-  export let ui: VisualInterface;
-  export let streetControl: Street;
-  export let playerControl: Player;
 
+  let viewport: ƒ.Viewport;
+  let ui: VisualInterface;
+  let streetControl: Street;
+  let playerControl: Player;
   let highscore: number = 0;
   let currentTime: number;
   let oldTime: number;
-  let isSpawned: boolean = false;
   let playerModel: ƒ.Node;
   let streetModel: ƒ.Node;
   let asphaltModel: ƒ.Node;
   let motorStarted: boolean = false;
-  let enemyControl: Enemy;
-  let chrashSound: ƒ.ComponentAudio;
+  let enemyControl: EnemyManager;
+  let crashSound: ƒ.ComponentAudio;
   let engineStartSound: ƒ.ComponentAudio;
   let engineRunningSound: ƒ.ComponentAudio;
 
@@ -43,7 +42,7 @@ namespace Script {
     asphaltModel.addChild(streetControl);
     streetControl.stopStreet();
 
-    enemyControl = new Enemy("Enemy");
+    enemyControl = new EnemyManager();
 
     ui = new VisualInterface();
 
@@ -72,24 +71,15 @@ namespace Script {
     if(motorStarted){
       playerControl.move();
     
-      
+      enemyControl.checkLives();
       enemyControl.move();
-
-      spawnEnemy(highscore);
-
-      if(highscore%10 == 1 || highscore%10 == 6) {
-        isSpawned = false;
-      }
+      enemyControl.spawnEnemy(highscore);
   
       oldTime = currentTime;
       currentTime = Math.floor(ƒ.Time.game.get() / 1000);
       if(oldTime != currentTime) {
         highscore++;
       }
-  
-      /*if(playerControl.getLives() <= 0) {
-        stopGame();
-      }*/
     }
 
     viewport.draw();
@@ -99,19 +89,14 @@ namespace Script {
   function setCamera(): void {
     cameraNode = new ƒ.Node("camNode");
     let cameraComponent: ƒ.ComponentCamera = new ƒ.ComponentCamera();
-    //let canvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector("canvas");
     viewport.camera = cameraComponent;
-    //viewport.camera.projectCentral(canvas.clientWidth / canvas.clientHeight, 5);
-    viewport.camera.mtxPivot.rotateY(0);
     viewport.camera.mtxPivot.rotateX(17);
-    viewport.camera.mtxPivot.rotateZ(0);
     viewport.camera.mtxPivot.translateZ(-200);
-    viewport.camera.mtxPivot.translateY(0);
-    viewport.camera.mtxPivot.translateX(0);
     cameraNode.addComponent(cameraComponent);
   }
 
   function stopGame() {
+    ui.lives = 0;
     console.log("endGame");
     let deadScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#deadScreen");
     deadScreen.style.display = "block";
@@ -137,14 +122,9 @@ namespace Script {
     motorStarted = true;
   }
 
-  function spawnEnemy(spawnTime: number) {
-    if((spawnTime%10 == 0 || spawnTime%10 == 5) && !isSpawned) {
-      enemyControl.startEnemy();
-      isSpawned = true;
-    }
-  }
-
   function collided() {
-
+    crashSound = streetModel.getComponent(ƒ.ComponentAudio);
+    crashSound.volume = 0.1;
+    crashSound.play(true);
   }
 }
