@@ -46,5 +46,3 @@ Repository for everything PRIMA related, such as tasks and duties
 |  C | Net                 | - |
 |  D | State Machines      | - |
 |  E | Animation           | Animation wurden in Form von Sprites verwendet. Die Straße wird als Endlos mithilfe von Sprites etabliert und dargestellt. Dazu wird durch die Bewegung der Straße das Fahren simuliert. |
-```
-
