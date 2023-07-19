@@ -29,7 +29,6 @@ Repository for everything PRIMA related, such as tasks and duties
 
 ## Checklist for the final assignment
 
-```markdown
 © Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
 | Nr | Criterion           | Explanation                                                                                                                                     |
 |---:|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
