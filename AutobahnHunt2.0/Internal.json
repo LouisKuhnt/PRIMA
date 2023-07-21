@@ -306,6 +306,14 @@
       }
     }
   },
+  "Audio|2023-07-19T13:41:29.218Z|01583": {
+    "ƒ.Audio": {
+      "url": "Assets\\crash.mp3",
+      "idResource": "Audio|2023-07-19T13:41:29.218Z|01583",
+      "name": "Assets\\crash.mp3",
+      "type": "Audio"
+    }
+  },
   "Graph|2023-07-11T10:45:19.148Z|55359": {
     "ƒ.Graph": {
       "name": "Game",
@@ -388,7 +396,7 @@
                           "clrPrimary": "[1, 1, 1, 1]",
                           "clrSecondary": "[1, 1, 1, 1]",
                           "pivot": {
-                            "translation": "[0.6666666865348816, 0]",
+                            "translation": "[0.9166666865348816, 0]",
                             "rotation": 0,
                             "scaling": "[0.0833333358168602, 1]"
                           },
@@ -1286,7 +1294,7 @@
                       "scaling": "[1.5, 1.5, 1.5]"
                     },
                     "Component": {
-                      "active": true
+                      "active": false
                     }
                   }
                 }
@@ -1311,7 +1319,7 @@
                       "scaling": "[15, 9, 26]"
                     },
                     "Component": {
-                      "active": true
+                      "active": false
                     }
                   }
                 }
@@ -1339,7 +1347,7 @@
                                   "scaling": "[4, 4, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1356,7 +1364,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
                               }
@@ -1381,7 +1389,7 @@
                                   "scaling": "[4, 4, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1398,7 +1406,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
                               }
@@ -1423,7 +1431,7 @@
                                   "scaling": "[4, 4, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1440,7 +1448,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
                               }
@@ -1465,7 +1473,7 @@
                                   "scaling": "[4, 4, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1482,7 +1490,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-11T08:31:46.844Z|49725"
                               }
@@ -1510,7 +1518,7 @@
                             "scaling": "[12, 5, 25]"
                           },
                           "Component": {
-                            "active": true
+                            "active": false
                           }
                         }
                       }
@@ -1527,7 +1535,7 @@
                             "scaling": "[1, 1]"
                           },
                           "Component": {
-                            "active": true
+                            "active": false
                           },
                           "idMaterial": "Material|2023-07-12T16:10:54.064Z|48254"
                         }
@@ -1552,7 +1560,7 @@
                             "scaling": "[10, 5, 13]"
                           },
                           "Component": {
-                            "active": true
+                            "active": false
                           }
                         }
                       }
@@ -1569,7 +1577,7 @@
                             "scaling": "[1, 1]"
                           },
                           "Component": {
-                            "active": true
+                            "active": false
                           },
                           "idMaterial": "Material|2023-07-11T08:22:45.147Z|25166"
                         }
@@ -1592,7 +1600,7 @@
                                   "scaling": "[9.5, 2.0000009536743164, 3.7999989986419678]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1609,7 +1617,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-12T09:48:04.679Z|18453"
                               }
@@ -1634,7 +1642,7 @@
                                   "scaling": "[9.40000057220459, 8.500001907348633, 4.600001335144043]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 }
                               }
                             }
@@ -1651,7 +1659,7 @@
                                   "scaling": "[1, 1]"
                                 },
                                 "Component": {
-                                  "active": true
+                                  "active": false
                                 },
                                 "idMaterial": "Material|2023-07-12T09:48:04.679Z|18453"
                               }
@@ -2550,14 +2558,6 @@
         "name": "Assets\\EnemyCar_Color_4.png",
         "mipmap": "CRISP"
       }
-    }
-  },
-  "Audio|2023-07-19T13:41:29.218Z|01583": {
-    "ƒ.Audio": {
-      "url": "Assets\\crash.mp3",
-      "idResource": "Audio|2023-07-19T13:41:29.218Z|01583",
-      "name": "Assets\\crash.mp3",
-      "type": "Audio"
     }
   }
 }

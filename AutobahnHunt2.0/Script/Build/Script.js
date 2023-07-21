@@ -276,7 +276,6 @@ var Script;
     }
     function stopGame() {
         ui.lives = 0;
-        console.log("endGame");
         let deadScreen = document.querySelector("#deadScreen");
         deadScreen.style.display = "block";
         let p = document.createElement("p");

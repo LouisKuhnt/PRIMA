@@ -97,7 +97,6 @@ namespace Script {
 
   function stopGame() {
     ui.lives = 0;
-    console.log("endGame");
     let deadScreen: HTMLDivElement = <HTMLDivElement>document.querySelector("#deadScreen");
     deadScreen.style.display = "block";
 
