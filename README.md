@@ -19,7 +19,7 @@ Repository for everything PRIMA related, such as tasks and duties
 - Link to the source code:
   - https://github.com/LouisKuhnt/PRIMA/tree/main/AutobahnHunt2.0
 - Link to design document:
-  - Gibts noch nicht
+  - https://github.com/LouisKuhnt/PRIMA/blob/main/AutobahnHunt2.0/Documentation/Design-Dokument-AutobahnHunt.pdf
 - Description for users on how to interact:
   - __A__ or __Arrow left__ -> For a left turn
   - __D__ or __Arrow right__ -> For a right turn
